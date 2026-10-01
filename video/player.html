@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:"Manrope";src:url("fonts/manrope.woff2");font-weight:200 800}
+@font-face{font-family:"DM Sans";src:url("fonts/dmsans.woff2");font-weight:100 1000}
+:root{--bg:#F7F8FA;--ink:#111827;--ink2:#374151;--muted:#6B7280;--line:#E5E7EB;--blue:#2457E6;--blue-soft:#E9EFFF;--mint:#1AA982;--mint-soft:#E3F6EF;--coral:#F16B5B;--coral-soft:#FDECEA;--coral-ink:#A8301E;--mint-ink:#0F7A5D}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);font-family:"DM Sans",sans-serif;color:var(--ink)}
+#stage{position:absolute;inset:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(110px);opacity:.5}
+.chrome-top{position:absolute;left:90px;right:90px;top:46px;display:flex;justify-content:space-between;align-items:center;font-family:"Manrope";font-weight:700;font-size:28px;color:var(--muted)}
+.logo{display:flex;align-items:center;gap:14px;font-size:36px;font-weight:800;color:var(--ink);letter-spacing:-.03em}
+.logo .mark{width:52px;height:52px;border-radius:15px;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:32px;padding-bottom:3px}
+.logo b{color:var(--blue)}
+#content{position:absolute;left:150px;right:150px;top:135px;height:700px;display:flex;flex-direction:column;justify-content:center;transform-origin:50% 50%}
+#caption{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);max-width:1560px;text-align:center;background:rgba(17,24,39,.9);color:#fff;font-weight:600;font-size:38px;line-height:1.3;padding:14px 36px;border-radius:20px;opacity:0;white-space:pre-line}
+#prog{position:absolute;left:0;bottom:0;height:8px;background:var(--blue);width:0}
+#progbg{position:absolute;left:0;right:0;bottom:0;height:8px;background:#e6e9ef}
+.ic{display:inline-block;flex:none}.ic svg{width:100%;height:100%;stroke-width:1.7}
+h1,h2,h3{font-family:"Manrope";letter-spacing:-.03em;line-height:1.08}
+.eyebrow{font-family:"Manrope";font-weight:800;font-size:30px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue)}
+.card{background:#fff;border:2px solid var(--line);border-radius:30px;box-shadow:0 2px 4px rgba(17,24,39,.04),0 18px 44px rgba(17,24,39,.08)}
+.pill{display:inline-flex;align-items:center;gap:14px;border-radius:999px;font-family:"Manrope";font-weight:800;padding:14px 32px}
+.row{display:flex}.col{display:flex;flex-direction:column}
+.center{align-items:center;justify-content:center;text-align:center}
+.tone-blue{background:var(--blue);color:#fff}.tone-mint{background:var(--mint-soft);color:var(--mint-ink)}.tone-grey{background:#eceef2;color:var(--ink2)}.tone-coral{background:var(--coral-soft);color:var(--coral-ink)}
+#tag{position:absolute;right:90px;top:112px;font-size:24px;font-weight:700;background:#eceef2;color:var(--muted);padding:8px 20px;border-radius:999px;display:none}
+</style></head>
+<body><div id="stage">
+  <div class="blob" style="width:760px;height:760px;left:-200px;top:-260px;background:#cfdcff"></div>
+  <div class="blob" style="width:640px;height:640px;right:-160px;top:380px;background:#cdeee3"></div>
+  <div class="blob" style="width:520px;height:520px;left:42%;top:-300px;background:#fde0db;opacity:.4"></div>
+  <div class="chrome-top"><div class="logo"><span class="mark">@</span><span>Aro<b>Baz</b></span></div><div id="chrome-r"></div></div>
+  <div id="tag">Illustration</div>
+  <div id="content"></div>
+  <div id="caption"></div>
+  <div id="progbg"></div><div id="prog"></div>
+</div>
+<script>
+const EASE = "cubic-bezier(.2,.8,.2,1)";
+const $ = (s) => document.querySelector(s);
+const warn = (window.__warn = []);
+const norm = (s) => s.toLowerCase().replace(/[’‘`]/g, "'").replace(/ | /g, " ").replace(/\s+/g, " ");
+
+function h(tag, attrs = {}, kids = []) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "style") e.style.cssText = v; else if (k === "class") e.className = v; else if (k === "html") e.innerHTML = v; else e.setAttribute(k, v);
+  }
+  (Array.isArray(kids) ? kids : [kids]).forEach((c) => c != null && e.append(c.nodeType ? c : document.createTextNode(c)));
+  return e;
+}
+let ICONS = {};
+const ic = (name, size = 60, color = "currentColor") => h("span", { class: "ic", style: `width:${size}px;height:${size}px;color:${color}`, html: ICONS[name] || "" });
+
+let TIMING, T;
+// instant (s) auquel un extrait du texte est prononcé
+function cue(snippet, fallback = 0) {
+  if (typeof snippet === "number") return snippet;
+  const q = norm(snippet);
+  for (const p of TIMING.phrases) {
+    const t = norm(p.texte), i = t.indexOf(q);
+    if (i >= 0) return Math.max(0.2, p.debut + (i / t.length) * (p.fin - p.debut) - 0.12);
+  }
+  warn.push("cue introuvable: " + snippet);
+  return fallback;
+}
+function anim(el, kf, o) { const a = el.animate(kf, { fill: "both", easing: EASE, ...o }); a.pause(); return a; }
+function appear(el, t, { dy = 30, dx = 0, scale = 0.96, dur = 650 } = {}) {
+  return anim(el, [{ opacity: 0, transform: `translate(${dx}px,${dy}px) scale(${scale})` }, { opacity: 1, transform: "none" }], { duration: dur, delay: t * 1000 });
+}
+function vanish(el, t, dur = 400) { return anim(el, [{ opacity: 1 }, { opacity: 0 }], { duration: dur, delay: t * 1000, fill: "forwards" }); }
+function light(el, t) {
+  return anim(el, [{ filter: "grayscale(1)", opacity: 0.4, transform: "scale(.97)" }, { filter: "grayscale(0)", opacity: 1, transform: "scale(1)" }], { duration: 600, delay: t * 1000 });
+}
+function wipe(el, t, dur = 1100) {
+  return anim(el, [{ clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0 0 0)" }], { duration: dur, delay: t * 1000, easing: "linear" });
+}
+const hidden = (el) => { el.style.opacity = 0; return el; }; // sécurité avant la première animation
+
+/* ---------------- scènes ---------------- */
+const K = {};
+
+K.intro = (s, C) => {
+  const logo = h("div", { class: "logo", style: "font-size:150px;gap:36px;justify-content:center" }, [h("span", { class: "mark", style: "width:170px;height:170px;border-radius:48px;font-size:110px;padding-bottom:10px" }, "@"), h("span", {}, ["Aro", h("b", {}, "Baz")])]);
+  const l1 = h("div", { class: "eyebrow", style: "text-align:center;margin-top:60px" }, s.ligne1);
+  const l2 = h("h1", { style: "font-size:84px;text-align:center;margin-top:22px;font-weight:800" }, s.ligne2);
+  const l3 = h("div", { style: "font-size:44px;text-align:center;color:var(--ink2);margin-top:20px" }, s.ligne3);
+  C.append(logo, l1, l2, l3);
+  appear(logo, 0.2, { scale: .9, dy: 10 }); appear(l1, 0.9); appear(l2, 1.3); appear(l3, 1.9);
+};
+
+K.taches = (s, C) => {
+  const row = h("div", { class: "row", style: "gap:44px;justify-content:center" });
+  const cols = ["var(--blue)", "var(--mint)", "var(--coral)"];
+  s.items.forEach((it, i) => {
+    const c = h("div", { class: "card col center", style: "width:500px;height:380px;padding:36px;gap:28px" }, [
+      h("div", { style: `width:150px;height:150px;border-radius:44px;display:grid;place-items:center;background:${["var(--blue-soft)", "var(--mint-soft)", "var(--coral-soft)"][i]};color:${cols[i]}` }, ic(it.icon, 84)),
+      h("div", { style: "font-family:Manrope;font-weight:800;font-size:40px;line-height:1.2" }, it.label)]);
+    row.append(c); appear(c, cue(it.cue, 1 + i));
+  });
+  const slot = h("div", { style: "height:150px;margin-top:56px;position:relative" });
+  let prev = null;
+  s.bandeaux.forEach((b) => {
+    const el = h("div", { class: "pill tone-" + b.tone, style: "position:absolute;left:50%;top:0;transform:translateX(-50%);font-size:54px;padding:22px 56px;white-space:nowrap" }, [b.icon ? ic(b.icon, 60) : null, b.text]);
+    slot.append(el); const t = cue(b.cue);
+    el.style.left = "0"; el.style.right = "0"; el.style.margin = "0 auto"; el.style.width = "max-content"; el.style.transform = "none";
+    appear(el, t); if (prev) vanish(prev, t, 300); prev = el;
+  });
+  C.append(row, slot);
+};
+
+K.objectifs = (s, C) => {
+  const left = h("div", { style: "width:700px" }, [h("div", { class: "eyebrow" }, s.eyebrow), h("h1", { style: "font-size:96px;margin-top:24px;font-weight:800" }, s.titre)]);
+  const right = h("div", { class: "col", style: "gap:28px;flex:1" });
+  s.items.forEach((it, i) => {
+    const r = h("div", { class: "card row", style: "align-items:center;gap:30px;padding:34px 40px" }, [
+      h("div", { style: "width:84px;height:84px;border-radius:50%;background:var(--mint);color:#fff;display:grid;place-items:center" }, ic("check", 50)),
+      h("div", { style: "font-family:Manrope;font-weight:700;font-size:44px;line-height:1.2" }, it.text)]);
+    right.append(r); appear(r, cue(it.cue, 3 + i * 2), { dx: 60, dy: 0 });
+  });
+  const lay = h("div", { class: "row", style: "gap:100px;align-items:center" }, [left, right]);
+  C.append(lay); appear(left, 0.3, { dy: 20 });
+};
+
+K.avantApres = (s, C) => {
+  const panel = (p, tone) => {
+    const chips = h("div", { class: "col", style: "gap:14px;margin-top:26px;align-items:flex-start" });
+    p.chips.forEach((c) => { const e = h("div", { class: "pill tone-" + tone, style: "font-size:34px;padding:10px 26px" }, [ic(tone === "grey" ? "x" : "check", 34), c.text]); chips.append(e); appear(e, cue(c.cue), { dx: -30, dy: 0 }); });
+    return { chips, head: h("div", { class: "pill tone-" + tone, style: "font-size:30px;letter-spacing:.12em;text-transform:uppercase;padding:10px 26px" }, p.titre) };
+  };
+  const g = panel(s.gauche, "grey"), d = panel(s.droite, "blue");
+  const code = h("div", { style: "background:#1f2937;border-radius:20px;padding:26px 28px;display:grid;gap:14px;margin-top:26px;width:100%" }, [
+    h("div", { class: "row", style: "gap:10px" }, ["#f16b5b", "#f4c04e", "#1aa982"].map((c) => h("i", { style: `width:16px;height:16px;border-radius:50%;background:${c}` }))),
+    ...[[70, "#8fb0ff"], [46, "#9ca3af"], [82, "#f4c04e"], [58, "#9ca3af"], [36, "#1aa982"]].map(([w, c]) => h("div", { style: `height:14px;border-radius:7px;width:${w}%;background:${c};opacity:.85;margin-left:${w % 3 * 14}px` }))]);
+  const chat = h("div", { class: "col", style: "gap:18px;margin-top:26px;width:100%" }, [
+    h("div", { style: "align-self:flex-end;background:var(--blue);color:#fff;border-radius:28px 28px 6px 28px;padding:18px 28px;font-size:34px;font-weight:600;max-width:560px" }, s.droite.demande),
+    h("div", { class: "card", style: "align-self:flex-start;border-radius:28px 28px 28px 6px;padding:22px 28px;width:560px;display:grid;gap:12px" }, [38, 90, 70].map((w) => h("div", { style: `height:14px;border-radius:7px;background:#d5dae3;width:${w}%` })))]);
+  const mk = (p, body, color) => h("div", { class: "card col", style: `width:700px;padding:36px 40px;align-items:flex-start;border-top:8px solid ${color}` }, [p.head, body, p.chips]);
+  const L = mk(g, code, "#9ca3af"), R = mk(d, chat, "var(--blue)");
+  const arrow = h("div", { style: "color:var(--blue)" }, ic("arrow-right", 110));
+  const panels = h("div", { class: "row", style: "gap:30px;align-items:center;justify-content:center" }, [L, arrow, R]);
+  const band = h("div", { style: "height:130px;margin-top:34px;position:relative" });
+  let prev = null;
+  s.conclusion.forEach((c) => {
+    const e = h("div", { class: "pill tone-blue", style: "position:absolute;left:0;right:0;margin:0 auto;width:max-content;max-width:1620px;font-size:46px;padding:24px 56px;text-align:center;line-height:1.2" }, c.text);
+    band.append(e); const t = cue(c.cue); appear(e, t); if (prev) vanish(prev, t, 300); prev = e;
+  });
+  C.append(panels, band);
+  appear(L, cue(s.gauche.cue, 0.6)); appear(arrow, cue(s.droite.cue), { dx: -20, dy: 0 }); appear(R, cue(s.droite.cue));
+};
+
+K.grille = (s, C) => {
+  const colors = ["var(--blue)", "var(--mint)", "var(--coral)"];
+  const grid = h("div", { style: "display:grid;grid-template-columns:repeat(3,1fr);gap:26px" });
+  s.tuiles.forEach((tl, i) => {
+    const col = colors[i % 3];
+    const el = h("div", { class: "card row", style: `align-items:center;gap:28px;padding:0 36px;height:178px;border-left:10px solid ${col}` }, [
+      h("div", { style: `width:100px;height:100px;border-radius:30px;display:grid;place-items:center;background:#fff;color:${col};box-shadow:inset 0 0 0 3px ${col}` }, ic(tl.icon, 58)),
+      h("div", { style: "font-family:Manrope;font-weight:800;font-size:42px" }, tl.label)]);
+    grid.append(el); light(el, cue(tl.cue, 2 + i));
+  });
+  const fin = h("div", { style: "margin-top:34px;text-align:center;font-family:Manrope;font-weight:800;font-size:46px;color:var(--blue)" }, s.fin.text);
+  C.append(grid, fin); appear(fin, cue(s.fin.cue));
+};
+
+K.echange = (s, C) => {
+  const q = h("div", { style: "align-self:flex-end;background:var(--blue);color:#fff;border-radius:36px 36px 8px 36px;padding:30px 40px;font-size:42px;font-weight:600;max-width:980px;line-height:1.3" }, s.question);
+  const list = h("div", { class: "col", style: "gap:14px;margin-top:16px" });
+  s.reponses.forEach((r) => { const e = h("div", { class: "row", style: "align-items:center;gap:20px;font-size:42px;font-weight:600" }, [h("span", { style: "color:var(--mint)" }, ic("check", 46)), r.text]); list.append(e); appear(e, cue(r.cue), { dx: -30, dy: 0, dur: 500 }); });
+  const a = h("div", { class: "card row", style: "align-self:flex-start;border-radius:36px 36px 36px 8px;padding:32px 40px;gap:28px;width:1060px;align-items:flex-start" }, [
+    h("div", { style: "width:84px;height:84px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;flex:none" }, ic("sparkles", 50)),
+    h("div", {}, [h("div", { style: "font-weight:800;font-family:Manrope;font-size:30px;color:var(--muted)" }, "Assistant IA"), list])]);
+  const left = h("div", { class: "col", style: "gap:26px;flex:1" }, [q, a]);
+  appear(q, cue(s.cueQuestion, 0.8), { dx: 40, dy: 0 }); appear(a, cue(s.reponses[0].cue) - 0.5);
+  const right = h("div", { class: "col", style: "gap:22px;width:520px;justify-content:center" });
+  let prev = null;
+  s.verdicts.forEach((v) => {
+    const e = h("div", { class: "card col", style: `padding:30px 34px;gap:12px;border-left:10px solid ${v.tone === "mint" ? "var(--mint)" : "var(--coral)"}` }, [
+      h("div", { class: "row", style: `align-items:center;gap:16px;font-family:Manrope;font-weight:800;font-size:38px;color:${v.tone === "mint" ? "var(--mint-ink)" : "var(--coral-ink)"}` }, [ic(v.icon, 46), v.titre]),
+      h("div", { style: "font-size:32px;color:var(--ink2);line-height:1.3" }, v.texte)]);
+    right.append(e); appear(e, cue(v.cue), { dx: 40, dy: 0 });
+  });
+  const ban = h("div", { class: "pill tone-blue", style: "margin-top:34px;align-self:center;font-size:44px;padding:22px 52px" }, s.conclusion.text);
+  C.append(h("div", { class: "row", style: "gap:50px;align-items:stretch" }, [left, right]), ban); appear(ban, cue(s.conclusion.cue));
+  $("#tag").style.display = "block";
+};
+
+K.etapes = (s, C) => {
+  const colors = ["var(--blue)", "var(--mint)", "var(--coral)", "var(--blue)", "var(--mint)"];
+  const soft = ["var(--blue-soft)", "var(--mint-soft)", "var(--coral-soft)", "var(--blue-soft)", "var(--mint-soft)"];
+  const wrap = h("div", { style: "position:relative" });
+  const line = h("div", { style: "position:absolute;left:150px;right:150px;top:92px;height:10px;border-radius:5px;background:#e3e6ec" });
+  const fill = h("div", { style: "position:absolute;left:150px;right:150px;top:92px;height:10px;border-radius:5px;background:var(--blue);transform-origin:left" });
+  const row = h("div", { class: "row", style: "justify-content:space-between;position:relative" });
+  const ts = s.etapes.map((e) => cue(e.cue));
+  s.etapes.forEach((e, i) => {
+    const col = h("div", { class: "col center", style: "width:300px;gap:20px" }, [
+      h("div", { style: `width:190px;height:190px;border-radius:50%;display:grid;place-items:center;background:${soft[i]};color:${colors[i]};border:8px solid #fff;box-shadow:0 14px 36px rgba(17,24,39,.12)` }, ic(e.icon, 92)),
+      h("div", { style: "font-family:Manrope;font-weight:800;font-size:56px" }, e.nom),
+      h("div", { style: "font-size:34px;line-height:1.3;color:var(--ink2)" }, e.texte)]);
+    row.append(col); light(col, ts[i]);
+  });
+  wrap.append(line, fill, row);
+  anim(fill, [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: (ts[4] - ts[0]) * 1000, delay: ts[0] * 1000, easing: "linear" });
+  C.append(wrap);
+};
+
+K.erreurs = (s, C) => {
+  const row = h("div", { class: "row", style: "gap:40px;justify-content:center" });
+  s.pieges.forEach((p) => {
+    const c = h("div", { class: "card col", style: "width:780px;height:410px;padding:40px 48px;gap:20px;background:var(--coral-soft);border:3px solid var(--coral);justify-content:center" }, [
+      h("div", { class: "row", style: "align-items:center;gap:26px;color:var(--coral-ink)" }, [h("div", { style: "width:100px;height:100px;border-radius:50%;background:var(--coral);color:#fff;display:grid;place-items:center" }, ic("x", 62)), h("div", { style: "font-family:Manrope;font-weight:800;font-size:68px" }, p.titre)]),
+      h("div", { style: "font-size:40px;line-height:1.3;color:var(--ink2)" }, p.texte),
+      h("div", { style: "font-size:32px;font-weight:700;color:var(--coral-ink)" }, p.renvoi)]);
+    row.append(c); appear(c, cue(p.cue));
+  });
+  const ok = h("div", { class: "card row", style: "margin-top:40px;gap:30px;align-items:center;justify-content:center;background:var(--mint-soft);border:3px solid var(--mint);padding:34px 40px" }, [
+    h("div", { style: "width:90px;height:90px;border-radius:50%;background:var(--mint);color:#fff;display:grid;place-items:center" }, ic("check", 56)),
+    h("div", { style: "font-family:Manrope;font-weight:800;font-size:60px;color:var(--mint-ink)" }, s.solution)]);
+  C.append(row, ok); appear(ok, cue(s.cueSolution));
+};
+
+K.programme = (s, C) => {
+  const list = h("div", { class: "col", style: "gap:12px;flex:1" });
+  s.lecons.forEach((l, i) => {
+    const r = h("div", { class: "card row", style: "align-items:center;gap:26px;padding:0 34px;height:76px;border-radius:22px" }, [
+      h("div", { style: `width:48px;height:48px;border-radius:50%;background:${i === 7 ? "var(--coral)" : "var(--blue)"};color:#fff;font-family:Manrope;font-weight:800;font-size:28px;display:grid;place-items:center;flex:none` }, String(l.n)),
+      h("div", { style: "font-family:Manrope;font-weight:700;font-size:36px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" }, l.titre),
+      h("div", { style: "font-size:28px;color:var(--muted);white-space:nowrap" }, l.duree)]);
+    list.append(r); light(r, cue(l.cue, 1 + i * 3));
+  });
+  const side = h("div", { class: "card col center", style: "width:470px;padding:40px;gap:24px;background:var(--blue);border-color:var(--blue);color:#fff" }, [
+    h("div", { style: "width:130px;height:130px;border-radius:40px;background:rgba(255,255,255,.16);display:grid;place-items:center" }, ic("bot", 80)),
+    h("div", { style: "font-family:Manrope;font-weight:800;font-size:30px;letter-spacing:.14em;text-transform:uppercase;opacity:.8" }, "À la fin du module"),
+    h("div", { style: "font-family:Manrope;font-weight:800;font-size:56px;line-height:1.1" }, "Votre premier assistant IA")]);
+  C.append(h("div", { class: "row", style: "gap:44px;align-items:stretch" }, [list, side])); appear(side, cue(s.cueFin));
+};
+
+K.appel = (s, C) => {
+  const top = h("div", { class: "row", style: "align-items:center;gap:26px" }, [h("div", { class: "pill tone-coral", style: "font-size:36px;letter-spacing:.1em;text-transform:uppercase" }, [ic("target", 40), "À vous"])]);
+  const q = h("h1", { style: "font-size:76px;margin:28px 0 36px;max-width:1500px;font-weight:800" }, s.consigne);
+  const ex = h("div", { class: "row", style: "gap:28px;margin-bottom:34px" });
+  const mauvais = h("div", { class: "pill tone-coral", style: "font-size:38px;font-weight:700" }, [ic("x", 40), s.mauvais.text]);
+  const bon = h("div", { class: "pill tone-mint", style: "font-size:38px;font-weight:700" }, [ic("check", 40), s.bon.text]);
+  ex.append(mauvais, bon); appear(mauvais, cue(s.mauvais.cue)); appear(bon, cue(s.bon.cue));
+  const lines = h("div", { class: "col", style: "gap:18px" });
+  s.lignes.forEach((l, i) => {
+    const e = h("div", { class: "row", style: "align-items:center;gap:26px" }, [
+      h("div", { style: "width:64px;height:64px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-family:Manrope;font-weight:800;font-size:34px;flex:none" }, String(i + 1)),
+      h("div", { style: "flex:1;height:64px;border-bottom:4px solid var(--line-2,#d1d5db)" })]);
+    lines.append(e); appear(e, cue(s.cueLignes) + i * 0.5, { dx: -30, dy: 0 });
+  });
+  C.append(top, q, ex, lines); appear(top, 0.4); appear(q, cue(s.cueConsigne, 1.5));
+};
+
+K.titre = (s, C) => {
+  const w = h("div", { class: "col center", style: "gap:34px" }, [
+    h("div", { class: "eyebrow" }, s.eyebrow),
+    h("div", { style: "width:200px;height:200px;border-radius:56px;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center" }, ic(s.icon, 120)),
+    h("h1", { style: "font-size:100px;max-width:1500px;font-weight:800" }, s.titre),
+    h("div", { class: "row", style: "align-items:center;gap:18px;font-size:40px;color:var(--ink2)" }, [s.sous, ic("arrow-right", 50, "var(--blue)")])]);
+  C.append(w); appear(w, 0.6);
+};
+
+/* ---------------- montage ---------------- */
+function sousTitres(phrases) {
+  const out = [];
+  for (const p of phrases) {
+    const mots = p.texte.split(/\s+/);
+    const chunks = []; let cur = "";
+    for (const m of mots) {
+      const next = cur ? cur + " " + m : m;
+      if (next.length > 60 && cur) { chunks.push(cur); cur = m; } else cur = next;
+      if (/[,;:]$/.test(m) && cur.length > 28) { chunks.push(cur); cur = ""; }
+    }
+    if (cur) chunks.push(cur);
+    const tot = chunks.reduce((n, c) => n + c.length, 0); let t = p.debut;
+    chunks.forEach((c) => { const d = ((p.fin - p.debut) * c.length) / tot; out.push({ texte: c.replace(/^\s+/, ""), debut: t, fin: t + d }); t += d; });
+  }
+  return out;
+}
+let CAPS = [], OFFSET = 0, TOTAL = 1;
+window.build = ({ kind, spec, timing, icons, offset, total, num, titreModule }) => {
+  ICONS = icons; TIMING = timing; T = timing.duree; OFFSET = offset; TOTAL = total;
+  $("#chrome-r").textContent = `${titreModule} · Leçon ${num}/8`;
+  const C = $("#content");
+  // la scène est construite dans un conteneur qu'on réduit au besoin pour qu'il tienne dans la zone utile
+  const fit = h("div", { style: "width:100%;flex:none;transform-origin:50% 50%" });
+  C.append(fit);
+  K[kind](spec, fit);
+  const echelle = Math.min(1, 700 / fit.offsetHeight, 1620 / fit.scrollWidth);
+  fit.style.transform = `scale(${echelle})`;
+  window.__echelle = echelle;
+  CAPS = timing.phrases ? sousTitres(timing.phrases) : [];
+  // ambiance : les formes dérivent lentement, légère avancée de caméra, fondus
+  document.querySelectorAll(".blob").forEach((b, i) => anim(b, [{ transform: "translate(0,0)" }, { transform: `translate(${i % 2 ? -90 : 90}px,${i === 1 ? -70 : 60}px)` }], { duration: 14000 + i * 3000, iterations: Infinity, direction: "alternate", easing: "ease-in-out" }));
+  anim(C, [{ transform: "scale(1)" }, { transform: "scale(1.025)" }], { duration: T * 1000, easing: "linear" });
+  anim($("#stage"), [{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: "linear" });
+  anim($("#stage"), [{ opacity: 1 }, { opacity: 0 }], { duration: 400, delay: (T - 0.4) * 1000, fill: "forwards", easing: "linear" });
+  return warn;
+};
+window.seek = (t) => {
+  document.getAnimations().forEach((a) => { a.pause(); a.currentTime = t * 1000; });
+  const cap = $("#caption");
+  let cur = null;
+  for (let i = 0; i < CAPS.length; i++) { const c = CAPS[i], nx = CAPS[i + 1]; if (t >= c.debut && t < Math.min(c.fin + 0.25, nx ? nx.debut : 1e9)) { cur = c; break; } }
+  cap.style.opacity = cur ? 1 : 0; if (cur && cap.textContent !== cur.texte) cap.textContent = cur.texte;
+  $("#prog").style.width = `${((OFFSET + t) / TOTAL) * 100}%`;
+};
+</script></body></html>

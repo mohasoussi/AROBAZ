@@ -1,0 +1,9 @@
+{
+  "name": "arobaz-video",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "extraire": "esbuild ../src/data/module1.ts --bundle --platform=node --format=esm --outfile=build/module1.mjs --log-level=error && node extraire.mjs"
+  },
+  "dependencies": { "esbuild": "*", "lucide-static": "*" }
+}
