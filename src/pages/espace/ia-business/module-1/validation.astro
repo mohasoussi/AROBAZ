@@ -1,0 +1,128 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ModuleNav from "../../../../components/ModuleNav.astro";
+import DemoNotice from "../../../../components/DemoNotice.astro";
+import Quiz from "../../../../components/Quiz.astro";
+import { MODULE1, QUIZ_MODULE1 } from "../../../../data/module1";
+const ids = MODULE1.lecons.map((l) => `ia-business/${l.slug}`);
+---
+<BaseLayout title="Validation du module 1" noindex>
+  <DemoNotice />
+  <div class="wrap layout">
+    <aside class="no-print"><ModuleNav actif="validation" /></aside>
+    <article data-ids={JSON.stringify(ids)}>
+      <div class="no-print">
+        <span class="eyebrow">Module 1 · Validation</span>
+        <h1>Validez vos acquis</h1>
+        <p class="lead">{QUIZ_MODULE1.length} questions sur l'ensemble du module. Il faut {Math.ceil(MODULE1.seuil * QUIZ_MODULE1.length)} bonnes réponses pour valider. Vous pouvez recommencer autant de fois que nécessaire.</p>
+
+        <div class="card checklist">
+          <h2 class="h3">Avant de commencer : vous savez…</h2>
+          <ul>{MODULE1.competences.map((c) => <li>{c}</li>)}</ul>
+          <p class="small muted lecons-etat" data-lecons-etat></p>
+        </div>
+
+        <Quiz id="quiz-module-1" questions={QUIZ_MODULE1} seuil={MODULE1.seuil} />
+      </div>
+
+      <section class="attestation-zone" data-attestation hidden>
+        <div class="no-print zone-tete">
+          <h2>Module validé 🎉</h2>
+          <p class="muted">Indiquez votre nom pour personnaliser votre attestation, puis imprimez-la ou enregistrez-la en PDF.</p>
+          <div class="nom">
+            <label for="nom" class="visually-hidden">Votre prénom et nom</label>
+            <input type="text" id="nom" placeholder="Votre prénom et nom" autocomplete="name" />
+            <button type="button" class="btn btn-primary" data-imprimer>Imprimer / PDF</button>
+          </div>
+          <p class="small muted" data-manque hidden></p>
+        </div>
+        <div class="attestation">
+          <div class="att-logo"><span>@</span> AroBaz</div>
+          <p class="att-kicker">Attestation de fin de module</p>
+          <p class="att-nom" data-att-nom>Votre nom</p>
+          <p>a suivi et validé le module</p>
+          <p class="att-titre">Module 1 · {MODULE1.titre}</p>
+          <p class="att-form">Formation « IA & Business : créer son projet avec l'IA »</p>
+          <p class="att-score">Quiz de validation réussi : <span data-att-score></span> · le <span data-att-date></span></p>
+          <p class="att-note">Attestation de suivi délivrée par AroBaz. Ce document n'est pas un diplôme ni une certification professionnelle.</p>
+        </div>
+      </section>
+    </article>
+  </div>
+</BaseLayout>
+<script>
+  import { lire, ecrire } from "../../../../scripts/progress";
+  const art = document.querySelector<HTMLElement>("[data-ids]")!;
+  const ids: string[] = JSON.parse(art.dataset.ids!);
+  const zone = document.querySelector<HTMLElement>("[data-attestation]")!;
+  const nom = document.querySelector<HTMLInputElement>("#nom")!;
+  const attNom = document.querySelector<HTMLElement>("[data-att-nom]")!;
+  const CLE = "ia-business/module-1";
+
+  const faites = () => ids.filter((i) => lire().lecons[i]?.terminee).length;
+  document.querySelector("[data-lecons-etat]")!.textContent = `Leçons terminées : ${faites()} sur ${ids.length}.`;
+
+  const montrer = () => {
+    const e = lire();
+    const m = e.modules[CLE];
+    if (!m?.valide) return;
+    zone.hidden = false;
+    nom.value = e.prenom ?? "";
+    attNom.textContent = e.prenom || "Votre nom";
+    document.querySelector("[data-att-score]")!.textContent = `${m.score}/${m.total}`;
+    document.querySelector("[data-att-date]")!.textContent = new Date(m.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+    const manque = ids.length - faites();
+    const p = document.querySelector<HTMLElement>("[data-manque]")!;
+    p.hidden = manque === 0;
+    p.textContent = `Conseil : il vous reste ${manque} leçon${manque > 1 ? "s" : ""} non terminée${manque > 1 ? "s" : ""}, dont la mission de la leçon 8. Le quiz est réussi, mais l'assistant, c'est ce qui vous servira vraiment.`;
+  };
+  montrer();
+
+  art.addEventListener("quiz:fini", (ev) => {
+    const { score, total, reussi } = (ev as CustomEvent).detail;
+    const e = lire();
+    const avant = e.modules[CLE];
+    if (reussi && (!avant?.valide || score > avant.score)) {
+      e.modules[CLE] = { score, total, valide: true, date: new Date().toISOString() };
+      ecrire(e);
+    }
+    montrer();
+    if (reussi) zone.scrollIntoView({ behavior: "smooth" });
+  });
+
+  nom.addEventListener("input", () => {
+    const e = lire();
+    e.prenom = nom.value.trim();
+    ecrire(e);
+    attNom.textContent = e.prenom || "Votre nom";
+  });
+  document.querySelector("[data-imprimer]")!.addEventListener("click", () => window.print());
+</script>
+<style>
+  .layout { display: grid; grid-template-columns: 290px 1fr; gap: 48px; padding-block: 40px 96px; align-items: start; }
+  @media (max-width: 960px) { .layout { grid-template-columns: 1fr; } aside { order: 2; } }
+  article { min-width: 0; max-width: 820px; }
+  .checklist { margin: 2rem 0; }
+  .checklist ul { color: var(--ink-2); margin-bottom: 0.8rem; }
+  .h3 { font-size: 1.1rem; }
+  .attestation-zone { margin-top: 3rem; }
+  .nom { display: flex; gap: 10px; flex-wrap: wrap; margin: 1rem 0; }
+  .nom input { flex: 1 1 240px; }
+  .attestation { margin-top: 1.5rem; background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: clamp(28px, 6vw, 64px); text-align: center; box-shadow: var(--shadow-lg); position: relative; }
+  .attestation::before { content: ""; position: absolute; inset: 12px; border: 2px solid var(--blue-soft); border-radius: 4px; pointer-events: none; }
+  .att-logo { font-family: var(--f-title); font-weight: 800; font-size: 1.3rem; display: inline-flex; gap: 0.5rem; align-items: center; }
+  .att-logo span { background: var(--blue); color: #fff; width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; }
+  .att-kicker { margin-top: 1.8rem; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.8rem; font-weight: 700; color: var(--blue); }
+  .att-nom { font-family: var(--f-title); font-weight: 800; font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 1rem 0 0.4rem; letter-spacing: -0.02em; }
+  .att-titre { font-family: var(--f-title); font-weight: 700; font-size: 1.3rem; margin: 0.4rem 0; }
+  .att-form { color: var(--ink-2); }
+  .att-score { margin-top: 1.6rem; font-size: 0.95rem; }
+  .att-note { font-size: 0.78rem; color: var(--muted); margin: 1.4rem auto 0; max-width: 36em; }
+  @media print {
+    :global(.site-header), :global(.site-footer), :global(.demo), .no-print { display: none !important; }
+    :global(body) { background: #fff; }
+    .layout { display: block; padding: 0; }
+    .attestation-zone { margin: 0; }
+    .attestation { box-shadow: none; border: 0; margin: 0; padding-top: 18vh; }
+  }
+</style>

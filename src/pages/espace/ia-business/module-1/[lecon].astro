@@ -1,0 +1,265 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import ModuleNav from "../../../../components/ModuleNav.astro";
+import DemoNotice from "../../../../components/DemoNotice.astro";
+import Quiz from "../../../../components/Quiz.astro";
+import { MODULE1, leconUrl } from "../../../../data/module1";
+import type { Lecon } from "../../../../data/types";
+
+export function getStaticPaths() {
+  return MODULE1.lecons.map((l, i) => ({
+    params: { lecon: l.slug },
+    props: { l, prec: MODULE1.lecons[i - 1], suiv: MODULE1.lecons[i + 1] },
+  }));
+}
+const { l, prec, suiv } = Astro.props as { l: Lecon; prec?: Lecon; suiv?: Lecon };
+const id = `ia-business/${l.slug}`;
+// Parties du script regroupées pour la transcription (les scènes consécutives d'une même partie sont fusionnées)
+const parties: { partie: string; textes: string[] }[] = [];
+for (const s of l.script) {
+  const der = parties[parties.length - 1];
+  if (der && der.partie === s.partie) der.textes.push(s.voix);
+  else parties.push({ partie: s.partie, textes: [s.voix] });
+}
+---
+<BaseLayout title={`Leçon ${l.numero} · ${l.titre}`} noindex>
+  <DemoNotice />
+  <div class="wrap layout">
+    <aside><ModuleNav actif={l.slug} /></aside>
+
+    <article class="lecon" data-lecon={id}>
+      <header>
+        <p class="crumbs small"><a href="/espace/">Mon espace</a> / <a href="/espace/ia-business/module-1/">Module 1</a> / Leçon {l.numero}</p>
+        <span class="eyebrow">Leçon {l.numero} sur {MODULE1.lecons.length} · {l.dureeCible}</span>
+        <h1>{l.titre}</h1>
+        <p class="lead">{l.sousTitre}</p>
+      </header>
+
+      <!-- Vidéo -->
+      <section class="video" aria-label="Vidéo de la leçon">
+        {l.video ? (
+          <video controls preload="metadata" src={l.video} />
+        ) : (
+          <div class="video-wait">
+            <div>
+              <span class="tag tag-grey">Vidéo en production</span>
+              <p>La vidéo de cette leçon est en cours de tournage. En attendant, suivez la leçon en lecture : la transcription complète est juste en dessous, avec les mêmes exemples et démonstrations.</p>
+              <a href="#lecon" class="btn btn-light btn-sm">Lire la leçon</a>
+            </div>
+          </div>
+        )}
+      </section>
+
+      <!-- Objectifs -->
+      <section class="bloc">
+        <h2 class="h">Dans cette leçon</h2>
+        <ul class="obj">{l.objectifs.map((o) => <li>{o}</li>)}</ul>
+      </section>
+
+      <!-- L'essentiel -->
+      <section class="bloc">
+        <h2 class="h">L'essentiel à retenir</h2>
+        <div class="essentiel">
+          {l.essentiel.map((e) => (
+            <div class="ess"><h3>{e.titre}</h3><p>{e.texte}</p></div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Transcription -->
+      <section class="bloc" id="lecon">
+        <h2 class="h">La leçon</h2>
+        <div class="transcription prose">
+          {parties.map((p) => (
+            <div class="part">
+              <span class="pl">{p.partie}</span>
+              {p.textes.map((t) => <p>{t}</p>)}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Prompt -->
+      {l.prompt && (
+        <section class="bloc">
+          <h2 class="h">Le prompt · {l.prompt.titre}</h2>
+          <div class="prompt">
+            <button type="button" class="btn btn-sm btn-light copier" data-copie>Copier</button>
+            <pre>{l.prompt.texte}</pre>
+          </div>
+          {l.prompt.conseil && <p class="small muted">{l.prompt.conseil}</p>}
+        </section>
+      )}
+
+      <!-- Exercice -->
+      <section class="bloc exo">
+        <h2 class="h">À vous · {l.exercice.titre}</h2>
+        <p>{l.exercice.consigne}</p>
+        {l.exercice.champs.map((c, i) => (
+          <div class="champ">
+            <label for={`ex-${i}`}>{c.label}</label>
+            {c.aide && <p class="small muted aide">{c.aide}</p>}
+            <textarea id={`ex-${i}`} data-champ={i} rows="4"></textarea>
+          </div>
+        ))}
+        <p class="small muted save" aria-live="polite">Vos réponses sont enregistrées automatiquement sur cet appareil.</p>
+      </section>
+
+      <!-- Vérifier -->
+      <section class="bloc">
+        <h2 class="h">Vérifiez votre travail</h2>
+        <ul class="verif">
+          {l.verifier.map((v, i) => (
+            <li><label><input type="checkbox" data-check={i} /> <span>{v}</span></label></li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Quiz -->
+      <section class="bloc">
+        <h2 class="h">Quiz de la leçon</h2>
+        <Quiz id={`quiz-${l.slug}`} questions={l.quiz} seuil={0.6} />
+      </section>
+
+      <!-- Validation -->
+      <section class="valider card">
+        <div>
+          <h2>Terminer la leçon</h2>
+          <p class="muted etat">Réussissez le quiz pour valider cette leçon.</p>
+        </div>
+        <button type="button" class="btn btn-mint" data-terminer disabled>Marquer comme terminée</button>
+      </section>
+
+      <nav class="suite" aria-label="Leçons voisines">
+        {prec ? <a href={leconUrl(prec)} class="btn btn-ghost">← {prec.titre}</a> : <span></span>}
+        {suiv
+          ? <a href={leconUrl(suiv)} class="btn btn-primary">Leçon suivante : {suiv.titre} →</a>
+          : <a href="/espace/ia-business/module-1/validation/" class="btn btn-primary">Valider le module →</a>}
+      </nav>
+    </article>
+  </div>
+</BaseLayout>
+
+<script>
+  import { lire, majLecon } from "../../../../scripts/progress";
+
+  const art = document.querySelector<HTMLElement>("[data-lecon]")!;
+  const id = art.dataset.lecon!;
+  const etat = lire().lecons[id] ?? {};
+
+  // Exercice : restauration et sauvegarde automatique
+  const save = art.querySelector<HTMLElement>(".save")!;
+  let minuterie: number | undefined;
+  art.querySelectorAll<HTMLTextAreaElement>("[data-champ]").forEach((t) => {
+    t.value = etat.exercice?.[t.dataset.champ!] ?? "";
+    t.addEventListener("input", () => {
+      clearTimeout(minuterie);
+      minuterie = window.setTimeout(() => {
+        majLecon(id, (l) => ((l.exercice ??= {})[t.dataset.champ!] = t.value));
+        save.textContent = "Enregistré sur cet appareil.";
+      }, 400);
+    });
+  });
+
+  // Grille de vérification
+  art.querySelectorAll<HTMLInputElement>("[data-check]").forEach((c) => {
+    const i = Number(c.dataset.check);
+    c.checked = etat.checks?.includes(i) ?? false;
+    c.addEventListener("change", () =>
+      majLecon(id, (l) => {
+        const s = new Set(l.checks ?? []);
+        c.checked ? s.add(i) : s.delete(i);
+        l.checks = [...s];
+      }),
+    );
+  });
+
+  // Copier le prompt
+  art.querySelectorAll<HTMLButtonElement>("[data-copie]").forEach((b) =>
+    b.addEventListener("click", async () => {
+      const txt = b.parentElement!.querySelector("pre")!.textContent ?? "";
+      try {
+        await navigator.clipboard.writeText(txt);
+        b.textContent = "Copié ✓";
+      } catch {
+        b.textContent = "Sélectionnez le texte";
+      }
+      setTimeout(() => (b.textContent = "Copier"), 2000);
+    }),
+  );
+
+  // Validation de la leçon
+  const bouton = art.querySelector<HTMLButtonElement>("[data-terminer]")!;
+  const etatTxt = art.querySelector<HTMLElement>(".valider .etat")!;
+  const afficher = (terminee: boolean, quiz?: { score: number; total: number }) => {
+    if (terminee) {
+      bouton.disabled = true;
+      bouton.textContent = "Leçon terminée ✓";
+      etatTxt.textContent = quiz ? `Quiz réussi (${quiz.score}/${quiz.total}). Vous pouvez passer à la suite.` : "Vous pouvez passer à la suite.";
+    }
+  };
+  afficher(!!etat.terminee, etat.quiz);
+
+  art.addEventListener("quiz:fini", (ev) => {
+    const { score, total, reussi } = (ev as CustomEvent).detail;
+    const deja = lire().lecons[id];
+    if (!deja?.quiz || score > deja.quiz.score) majLecon(id, (l) => (l.quiz = { score, total }));
+    if (reussi && !deja?.terminee) {
+      bouton.disabled = false;
+      etatTxt.textContent = `Quiz réussi (${score}/${total}). Validez la leçon quand vous avez fait l'exercice.`;
+    }
+  });
+
+  bouton.addEventListener("click", () => {
+    const e = majLecon(id, (l) => (l.terminee = true));
+    afficher(true, e.lecons[id].quiz);
+    document.querySelector(`.mnav [data-statut="${id}"]`)?.classList.add("fait");
+  });
+</script>
+
+<style>
+  .layout { display: grid; grid-template-columns: 290px 1fr; gap: 48px; padding-block: 40px 96px; align-items: start; }
+  @media (max-width: 960px) { .layout { grid-template-columns: 1fr; } aside { order: 2; } }
+  .lecon { min-width: 0; max-width: 820px; }
+  .crumbs { color: var(--muted); margin-bottom: 1.4rem; }
+  .crumbs a { color: var(--muted); }
+  .lecon h1 { font-size: clamp(1.9rem, 4vw, 2.8rem); }
+
+  .video { margin: 2rem 0 0; }
+  .video video { width: 100%; border-radius: var(--radius); background: #000; }
+  .video-wait { aspect-ratio: 16 / 9; border-radius: var(--radius); background: linear-gradient(135deg, #111827, #1b2a52 60%, #2457e6); color: #dbe5ff; display: grid; align-items: end; padding: clamp(20px, 4vw, 40px); }
+  .video-wait p { max-width: 34em; margin: 0.9rem 0 1.1rem; font-size: 0.98rem; }
+  @media (max-width: 560px) { .video-wait { aspect-ratio: auto; min-height: 260px; } }
+
+  .bloc { margin-top: 3.2rem; }
+  .h { font-size: 1.35rem; padding-bottom: 0.7rem; border-bottom: 1px solid var(--line); margin-bottom: 1.3rem; }
+  .obj li { color: var(--ink-2); }
+  .essentiel { display: grid; gap: 14px; }
+  .ess { background: var(--paper); border: 1px solid var(--line); border-left: 4px solid var(--blue); border-radius: var(--radius-sm); padding: 16px 20px; }
+  .ess h3 { font-size: 1.05rem; margin-bottom: 0.35rem; }
+  .ess p { margin: 0; color: var(--ink-2); }
+
+  .part { position: relative; padding-left: 0; margin-bottom: 1.6rem; }
+  .pl { display: inline-block; font-family: var(--f-title); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.4rem; }
+  .transcription p { font-size: 1.04rem; line-height: 1.75; }
+
+  .prompt { position: relative; background: var(--ink); border-radius: var(--radius); padding: 22px; padding-top: 56px; margin-bottom: 0.8rem; }
+  .prompt pre { margin: 0; white-space: pre-wrap; font-family: var(--f-mono); font-size: 0.9rem; line-height: 1.6; color: #e5e7eb; }
+  .copier { position: absolute; top: 12px; right: 12px; }
+
+  .exo { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(20px, 3vw, 32px); }
+  .exo .h { border-bottom: 0; padding-bottom: 0; }
+  .champ { margin-top: 1.3rem; }
+  .aide { margin: -0.2rem 0 0.5rem; }
+
+  .verif { list-style: none; padding: 0; margin: 0; }
+  .verif li { margin: 0 0 8px; }
+  .verif label { display: flex; gap: 0.75rem; align-items: flex-start; font-weight: 400; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.75rem 0.9rem; cursor: pointer; }
+  .verif input { margin-top: 0.35em; accent-color: var(--mint); width: 18px; height: 18px; flex: none; }
+  .verif label:has(input:checked) { background: var(--mint-soft); border-color: #bfe8da; }
+
+  .valider { margin-top: 3rem; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .valider h2 { font-size: 1.3rem; margin-bottom: 0.2rem; }
+  .valider p { margin: 0; }
+  .suite { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 2rem; }
+</style>

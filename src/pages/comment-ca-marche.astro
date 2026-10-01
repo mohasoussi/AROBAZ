@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHead from "../components/PageHead.astro";
+import { METHODE } from "../data/formations";
+const etapes = [
+  { t: "Vous choisissez votre parcours", d: "IA & Business pour créer et lancer votre projet, Contenu & Réseaux sociaux pour le faire connaître. Les deux se complètent." },
+  { t: "Vous avancez module par module", d: "Chaque module contient des leçons vidéo courtes, dans un ordre pensé pour que chaque notion serve la suivante. Vous pouvez faire une pause à tout moment et reprendre là où vous en étiez." },
+  { t: "Chaque leçon vous fait pratiquer", d: "Après la vidéo : l'essentiel à retenir, un prompt prêt à copier, un exercice appliqué à votre projet, une grille de vérification et un quiz corrigé immédiatement." },
+  { t: "Vous validez chaque module", d: "Un quiz de validation clôt chaque module. Une fois réussi, vous obtenez une attestation de fin de module." },
+  { t: "Votre projet prend forme", d: "Les livrables s'enchaînent : assistant IA, fiche projet, identité, site en ligne, boutique, automatisations. À la fin, votre projet est lancé." },
+];
+---
+<BaseLayout title="Comment ça marche" description="Comment fonctionnent les formations AroBaz : vidéos, démonstrations, exercices, quiz et validation, en autonomie.">
+  <PageHead eyebrow="Comment ça marche" titre="Une formation en autonomie, mais jamais sans repères." lead="Pas de cours en direct, pas d'horaires : vous avancez à votre rythme. Tout ce qu'il faut pour réussir est dans chaque leçon." />
+  <section class="section paper">
+    <div class="wrap-narrow">
+      <ol class="steps">
+        {etapes.map((e, i) => (
+          <li><span class="n">{i + 1}</span><div><h2>{e.t}</h2><p>{e.d}</p></div></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <span class="eyebrow">La méthode</span>
+      <h2>Apprendre → Observer → Faire → Vérifier → Améliorer</h2>
+      <div class="grid grid-3" style="margin-top:2rem">
+        {METHODE.map((m) => <div class="card"><h3>{m.etape}</h3><p class="muted" style="margin:0">{m.texte}</p></div>)}
+      </div>
+    </div>
+  </section>
+  <section class="section paper">
+    <div class="wrap-narrow">
+      <h2>Ce dont vous avez besoin</h2>
+      <ul class="needs">
+        <li><strong>Un ordinateur</strong> pour le parcours IA & Business (un smartphone suffit pour regarder les vidéos et faire certains exercices).</li>
+        <li><strong>Un assistant IA</strong> : ChatGPT, Claude, Gemini ou Le Chat. La version gratuite suffit pour commencer.</li>
+        <li><strong>Un projet</strong>, même encore flou. Le module 2 sert justement à le clarifier.</li>
+        <li><strong>Quelques heures par semaine.</strong> La régularité compte plus que la durée.</li>
+      </ul>
+      <p><a href="/espace/ia-business/module-1/" class="btn btn-primary">Essayer le module 1 gratuitement</a></p>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .steps { list-style: none; padding: 0; margin: 0; }
+  .steps li { display: grid; grid-template-columns: 48px 1fr; gap: 20px; padding: 24px 0; border-bottom: 1px solid var(--line); margin: 0; }
+  .steps h2 { font-size: 1.3rem; margin-bottom: 0.3rem; }
+  .steps p { margin: 0; color: var(--ink-2); }
+  .n { width: 44px; height: 44px; border-radius: 50%; background: var(--blue); color: #fff; display: grid; place-items: center; font-family: var(--f-title); font-weight: 800; }
+  .needs { color: var(--ink-2); margin-bottom: 2rem; }
+  .needs li + li { margin-top: 0.7rem; }
+</style>

@@ -1,0 +1,230 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { FORMATIONS, METHODE } from "../data/formations";
+import { MODULE1 } from "../data/module1";
+const total = FORMATIONS.reduce((n, f) => n + f.modules.length, 0);
+---
+<BaseLayout title="AroBaz">
+  <!-- 1. Hero éditorial -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Formations IA & numérique · en autonomie</span>
+        <h1>Apprenez.<br />Créez.<br /><span class="accent">Lancez-vous.</span></h1>
+        <p class="lead">
+          AroBaz vous apprend à utiliser l'IA et les outils numériques pour créer vous-même votre projet, votre activité et votre communication.
+          Sans être développeur, designer ou expert en marketing.
+        </p>
+        <div class="actions">
+          <a href="/espace/ia-business/module-1/" class="btn btn-primary">Commencer le module 1 gratuitement</a>
+          <a href="/formations/" class="btn btn-ghost">Voir les formations</a>
+        </div>
+        <p class="small muted">Module 1 en accès libre · aucune inscription · aucun prérequis</p>
+      </div>
+
+      <div class="hero-visual" aria-label="Aperçu d'une leçon AroBaz">
+        <div class="lv card">
+          <div class="lv-top">
+            <span class="tag">Module 1 · Leçon 6</span>
+            <span class="small muted">12 à 15 min</span>
+          </div>
+          <h3>Apprendre à parler à l'IA</h3>
+          <div class="lv-player">
+            <div class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></div>
+            <div class="lv-coccf" aria-hidden="true">
+              <span>C</span><span>O</span><span>C</span><span>C</span><span>F</span>
+            </div>
+          </div>
+          <ul class="lv-steps">
+            <li><i class="dot blue"></i>Vidéo et démonstration</li>
+            <li><i class="dot mint"></i>Prompt prêt à copier</li>
+            <li><i class="dot coral"></i>Exercice sur votre projet</li>
+            <li><i class="dot ink"></i>Quiz et validation</li>
+          </ul>
+          <div class="bar" aria-hidden="true"><span style="width:62%"></span></div>
+        </div>
+        <div class="float card small">
+          <strong>Contexte · Objectif · Cible · Contraintes · Format</strong>
+          <span class="muted">La méthode C.O.C.C.F. pour des demandes claires</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Bande de marque -->
+  <section class="band">
+    <div class="wrap band-inner">
+      <span>Sites internet</span><i>·</i><span>E-commerce</span><i>·</i><span>Applications</span><i>·</i><span>Automatisations</span><i>·</i><span>Réseaux sociaux</span><i>·</i><span>Vidéo</span><i>·</i><span>Contenu</span>
+    </div>
+  </section>
+
+  <!-- 3. Méthode -->
+  <section class="section paper">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">La méthode AroBaz</span>
+        <h2>On ne retient vraiment que ce qu'on a fait soi-même.</h2>
+        <p class="lead">Chaque leçon suit le même rythme en cinq temps. Pas de théorie qui s'accumule : une notion, une démonstration, et tout de suite la pratique sur votre propre projet.</p>
+      </div>
+      <ol class="methode">
+        {METHODE.map((m, i) => (
+          <li>
+            <span class="num">{String(i + 1).padStart(2, "0")}</span>
+            <h3>{m.etape}</h3>
+            <p>{m.texte}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 4. Formations -->
+  <section class="section">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Les formations</span>
+        <h2>Deux parcours complets pour lancer et faire connaître votre activité.</h2>
+      </div>
+      <div class="grid grid-2">
+        {FORMATIONS.map((f) => (
+          <a href={`/formations/${f.slug}/`} class={`card formation ${f.couleur}`}>
+            <span class={`tag ${f.couleur === "coral" ? "tag-coral" : ""}`}>{f.modules.length} modules · Débutant</span>
+            <h3>{f.titre}</h3>
+            <p class="muted">{f.accroche}</p>
+            <ul>
+              {f.modules.slice(0, 5).map((m) => <li>{m.titre}</li>)}
+              <li class="more">+ {f.modules.length - 5} autres modules</li>
+            </ul>
+            <span class="go">Découvrir le programme →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Chiffres -->
+  <section class="section-tight ink-bg">
+    <div class="wrap stats">
+      <div><strong>{FORMATIONS.length}</strong><span>parcours complets</span></div>
+      <div><strong>{total}</strong><span>modules au programme</span></div>
+      <div><strong>0</strong><span>prérequis technique</span></div>
+      <div><strong>{MODULE1.lecons.length}</strong><span>leçons disponibles dès maintenant</span></div>
+    </div>
+  </section>
+
+  <!-- 6. Comment ça marche -->
+  <section class="section paper">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Comment ça marche</span>
+        <h2>Vous avancez seul, mais jamais sans repères.</h2>
+      </div>
+      <div class="grid grid-4 how">
+        <div><span class="n">1</span><h3>Vous regardez</h3><p class="muted">Des vidéos courtes, une notion à la fois, avec de vraies démonstrations à l'écran.</p></div>
+        <div><span class="n">2</span><h3>Vous pratiquez</h3><p class="muted">Un exercice et un prompt prêt à l'emploi, appliqués directement à votre projet.</p></div>
+        <div><span class="n">3</span><h3>Vous validez</h3><p class="muted">Une grille de vérification et un quiz par leçon, puis un quiz de validation par module.</p></div>
+        <div><span class="n">4</span><h3>Vous construisez</h3><p class="muted">Module après module, votre projet prend forme : à la fin, il est en ligne.</p></div>
+      </div>
+      <p class="center"><a href="/comment-ca-marche/" class="btn btn-ghost">En savoir plus</a></p>
+    </div>
+  </section>
+
+  <!-- 7. Catalogue -->
+  <section class="section">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Catalogue</span>
+        <h2>Ce qui est disponible, et ce qui arrive.</h2>
+      </div>
+      <div class="grid grid-3">
+        <a class="card cat" href="/espace/ia-business/module-1/">
+          <span class="tag tag-mint">Disponible · accès libre</span>
+          <h3>Module 1 · Comprendre l'IA</h3>
+          <p class="muted">{MODULE1.lecons.length} leçons, exercices, prompts et quiz de validation. Votre premier assistant IA à la clé.</p>
+        </a>
+        <a class="card cat" href="/formations/ia-business/">
+          <span class="tag">En préparation</span>
+          <h3>IA & Business · parcours complet</h3>
+          <p class="muted">De l'idée au lancement : identité, site, e-commerce, application, automatisations.</p>
+        </a>
+        <a class="card cat" href="/formations/contenu-reseaux-sociaux/">
+          <span class="tag tag-coral">En préparation</span>
+          <h3>Contenu & Réseaux sociaux</h3>
+          <p class="muted">Stratégie, visuels, vidéos au téléphone, CapCut, IA vidéo et conversion.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. CTA -->
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="cta">
+        <div>
+          <h2>Votre premier assistant IA, dès aujourd'hui.</h2>
+          <p>Le module 1 est en accès libre. En une à deux heures, vous comprenez l'IA, vous savez lui parler, et vous repartez avec un assistant configuré pour votre projet.</p>
+        </div>
+        <a href="/espace/ia-business/module-1/" class="btn btn-light">Commencer maintenant</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { padding: clamp(48px, 8vw, 104px) 0 clamp(56px, 8vw, 96px); }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 6vw, 80px); align-items: center; }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+  .accent { color: var(--blue); }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 2rem 0 1rem; }
+
+  .hero-visual { position: relative; padding: 0 0 84px; }
+  .lv { padding: 24px; }
+  .lv-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+  .lv h3 { margin-bottom: 1rem; }
+  .lv-player { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; background: linear-gradient(135deg, #1b2a52, #2457e6); display: grid; place-items: center; overflow: hidden; margin-bottom: 1.1rem; }
+  .play { position: absolute; left: 14px; bottom: 14px; width: 44px; height: 44px; border-radius: 50%; background: #fff; color: var(--blue); display: grid; place-items: center; }
+  .lv-coccf { display: flex; gap: 8px; }
+  .lv-coccf span { width: 46px; height: 46px; border-radius: 10px; background: rgb(255 255 255 / 0.12); border: 1px solid rgb(255 255 255 / 0.25); color: #fff; font-family: var(--f-title); font-weight: 800; font-size: 1.3rem; display: grid; place-items: center; }
+  .lv-coccf span:nth-child(2) { background: var(--mint); border-color: var(--mint); }
+  .lv-steps { list-style: none; padding: 0; margin: 0 0 1.1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem; font-size: 0.92rem; color: var(--ink-2); }
+  .lv-steps li + li { margin-top: 0; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 0.5em; vertical-align: middle; }
+  .dot.blue { background: var(--blue); } .dot.mint { background: var(--mint); } .dot.coral { background: var(--coral); } .dot.ink { background: var(--ink); }
+  .float { position: absolute; right: -12px; bottom: 0; max-width: 300px; padding: 14px 18px; display: grid; gap: 2px; }
+  @media (max-width: 520px) { .float { position: static; margin-top: 12px; max-width: none; } .hero-visual { padding: 0; } }
+
+  .band { border-block: 1px solid var(--line); background: var(--paper); }
+  .band-inner { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem 1.1rem; padding-block: 22px; font-family: var(--f-title); font-weight: 700; color: var(--ink-2); }
+  .band i { color: var(--line-2); font-style: normal; }
+
+  .head { max-width: 760px; margin-bottom: clamp(32px, 5vw, 56px); }
+  .methode { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; counter-reset: none; }
+  @media (max-width: 1000px) { .methode { grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); } }
+  .methode li { margin: 0; padding: 24px 20px; border-radius: var(--radius); background: var(--bg); border: 1px solid var(--line); }
+  .methode .num { font-family: var(--f-title); font-weight: 800; color: var(--blue); font-size: 0.85rem; }
+  .methode h3 { margin: 0.6rem 0 0.4rem; }
+  .methode p { font-size: 0.95rem; color: var(--ink-2); margin: 0; }
+
+  .formation { border-top: 4px solid var(--blue); }
+  .formation.coral { border-top-color: var(--coral); }
+  .formation h3 { font-size: 1.55rem; margin: 1rem 0 0.5rem; }
+  .formation ul { list-style: none; padding: 0; margin: 1.25rem 0; border-top: 1px solid var(--line); }
+  .formation li { margin: 0; padding: 0.6rem 0; border-bottom: 1px solid var(--line); font-size: 0.95rem; color: var(--ink-2); }
+  .formation .more { color: var(--muted); border-bottom: 0; }
+  .go { font-family: var(--f-title); font-weight: 700; color: var(--blue); }
+  .formation.coral .go { color: var(--coral-ink); }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+  @media (max-width: 720px) { .stats { grid-template-columns: 1fr 1fr; } }
+  .stats strong { display: block; font-family: var(--f-title); font-size: clamp(2.4rem, 5vw, 3.4rem); font-weight: 800; color: #fff; letter-spacing: -0.04em; }
+  .stats span { color: #9ca3af; font-size: 0.95rem; }
+
+  .how .n { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--blue-soft); color: var(--blue); font-family: var(--f-title); font-weight: 800; margin-bottom: 0.8rem; }
+  .center { text-align: center; margin-top: 2.5rem; }
+
+  .cat h3 { margin-top: 1rem; }
+
+  .cta { background: var(--blue); color: #fff; border-radius: 20px; padding: clamp(28px, 5vw, 56px); display: flex; gap: 32px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .cta h2 { color: #fff; margin-bottom: 0.4em; }
+  .cta p { color: #dbe5ff; max-width: 40em; margin: 0; }
+</style>

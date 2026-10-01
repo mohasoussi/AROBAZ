@@ -1,0 +1,32 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+type Props = { title: string; description?: string; noindex?: boolean; bare?: boolean };
+const { title, description = "AroBaz : apprenez à utiliser l'IA et les outils numériques pour créer vous-même votre projet, votre activité et votre communication.", noindex = false, bare = false } = Astro.props;
+const fullTitle = title === "AroBaz" ? "AroBaz · Apprenez. Créez. Lancez-vous." : `${title} · AroBaz`;
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta name="theme-color" content="#2457E6" />
+  </head>
+  <body>
+    <a href="#contenu" class="skip">Aller au contenu</a>
+    <Header />
+    <main id="contenu"><slot /></main>
+    {!bare && <Footer />}
+  </body>
+</html>
+<style is:global>
+  .skip { position: absolute; left: -9999px; top: 8px; background: var(--ink); color: #fff; padding: 8px 12px; border-radius: 8px; z-index: 100; }
+  .skip:focus { left: 8px; }
+</style>

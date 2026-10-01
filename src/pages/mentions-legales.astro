@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHead from "../components/PageHead.astro";
+---
+<BaseLayout title="Mentions légales" noindex>
+  <PageHead eyebrow="Informations légales" titre="Mentions légales" />
+  <section class="section paper">
+    <div class="wrap-narrow prose">
+      <p class="todo"><strong>À compléter avant la mise en ligne publique.</strong> Les informations ci-dessous sont des emplacements à remplir avec vos données réelles.</p>
+      <h2>Éditeur du site</h2>
+      <p>[Nom ou raison sociale] · [Forme juridique] · [Adresse] · [SIREN / SIRET] · [E-mail de contact]</p>
+      <p>Directeur de la publication : [Nom]</p>
+      <h2>Hébergement</h2>
+      <p>[Nom de l'hébergeur, adresse]</p>
+      <h2>Données personnelles</h2>
+      <p>Les adresses e-mail laissées via les formulaires servent uniquement à vous répondre ou à vous prévenir du lancement des formations. Vous pouvez demander leur suppression à tout moment à [e-mail].</p>
+      <p>La progression dans l'espace élève est enregistrée uniquement dans votre navigateur (stockage local). Elle n'est pas transmise à AroBaz.</p>
+    </div>
+  </section>
+</BaseLayout>
+<style>.todo { background: #fff8e6; border: 1px solid #f3e2b3; padding: 12px 16px; border-radius: 10px; }</style>

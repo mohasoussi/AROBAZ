@@ -1,0 +1,116 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import DemoNotice from "../../components/DemoNotice.astro";
+import { FORMATIONS } from "../../data/formations";
+import { MODULE1, leconUrl } from "../../data/module1";
+const lecons = MODULE1.lecons.map((l) => ({ id: `ia-business/${l.slug}`, url: leconUrl(l), titre: l.titre, numero: l.numero }));
+---
+<BaseLayout title="Mon espace" noindex>
+  <DemoNotice />
+  <section class="top">
+    <div class="wrap">
+      <span class="eyebrow">Mon espace</span>
+      <h1 data-bonjour>Bonjour !</h1>
+      <p class="lead">Reprenez là où vous vous êtes arrêté, retrouvez vos exercices et vos ressources.</p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap dash">
+      <div class="main">
+        <div class="card cont" data-lecons={JSON.stringify(lecons)}>
+          <span class="tag">IA & Business · Module 1</span>
+          <h2>{MODULE1.titre}</h2>
+          <div class="bar"><span data-bar></span></div>
+          <p class="small muted" data-txt></p>
+          <a class="btn btn-primary" href={lecons[0].url} data-suite>Commencer</a>
+        </div>
+
+        <h2 class="h">Mes formations</h2>
+        <div class="grid grid-2">
+          {FORMATIONS.map((f) => (
+            <div class="card fo">
+              <span class={`tag ${f.couleur === "coral" ? "tag-coral" : ""}`}>{f.titreCourt}</span>
+              <h3>{f.titre}</h3>
+              <ul class="mods">
+                {f.modules.map((m) => (
+                  <li class:list={{ off: !m.disponible }}>
+                    {m.disponible ? <a href={`/espace/${f.slug}/module-${m.numero}/`}>Module {m.numero} · {m.titre}</a> : <span>Module {m.numero} · {m.titre}</span>}
+                    {!m.disponible && <em>bientôt</em>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="card">
+          <h2 class="h3">Mes objectifs avec l'IA</h2>
+          <div data-objectifs><p class="small muted">Vous les noterez dans la <a href={lecons[0].url}>leçon 1</a>.</p></div>
+        </div>
+        <div class="card">
+          <h2 class="h3">Mes ressources</h2>
+          <p class="small muted">Les prompts du module, prêts à copier : votre assistant, le gabarit C.O.C.C.F., les questions de vérification.</p>
+          <a href="/espace/ressources/" class="btn btn-ghost btn-sm">Ouvrir mes ressources</a>
+        </div>
+        <div class="card">
+          <h2 class="h3">Mes attestations</h2>
+          <div data-attestations><p class="small muted">Aucune pour l'instant. Validez le module 1 pour obtenir votre première attestation.</p></div>
+        </div>
+        <button type="button" class="reset small" data-reset>Effacer ma progression sur cet appareil</button>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+<script>
+  import { lire, reinitialiser } from "../../scripts/progress";
+  const e = lire();
+  if (e.prenom) document.querySelector("[data-bonjour]")!.textContent = `Bonjour ${e.prenom.split(" ")[0]} !`;
+
+  const box = document.querySelector<HTMLElement>("[data-lecons]")!;
+  const lecons: { id: string; url: string; titre: string; numero: number }[] = JSON.parse(box.dataset.lecons!);
+  const faites = lecons.filter((l) => e.lecons[l.id]?.terminee).length;
+  const suite = lecons.find((l) => !e.lecons[l.id]?.terminee);
+  box.querySelector<HTMLElement>("[data-bar]")!.style.width = `${(faites / lecons.length) * 100}%`;
+  box.querySelector("[data-txt]")!.textContent = `${faites} leçon${faites > 1 ? "s" : ""} terminée${faites > 1 ? "s" : ""} sur ${lecons.length}`;
+  const btn = box.querySelector<HTMLAnchorElement>("[data-suite]")!;
+  if (suite && faites > 0) { btn.href = suite.url; btn.textContent = `Continuer : leçon ${suite.numero} · ${suite.titre}`; }
+  if (!suite) { btn.href = "/espace/ia-business/module-1/validation/"; btn.textContent = e.modules["ia-business/module-1"]?.valide ? "Voir mon attestation" : "Passer la validation du module"; }
+
+  const objectifs = Object.values(e.lecons[lecons[0].id]?.exercice ?? {}).filter((v) => v.trim());
+  if (objectifs.length) {
+    const ul = document.createElement("ol");
+    objectifs.forEach((o) => { const li = document.createElement("li"); li.textContent = o; ul.append(li); });
+    document.querySelector("[data-objectifs]")!.replaceChildren(ul);
+  }
+  const m = e.modules["ia-business/module-1"];
+  if (m?.valide) {
+    const a = document.createElement("a");
+    a.href = "/espace/ia-business/module-1/validation/";
+    a.textContent = `Module 1 · Comprendre l'IA (${m.score}/${m.total})`;
+    document.querySelector("[data-attestations]")!.replaceChildren(a);
+  }
+  document.querySelector("[data-reset]")!.addEventListener("click", () => {
+    if (confirm("Effacer toute votre progression, vos exercices et vos résultats sur cet appareil ?")) { reinitialiser(); location.reload(); }
+  });
+</script>
+<style>
+  .top { padding: 40px 0 32px; }
+  .dash { display: grid; grid-template-columns: 1fr 340px; gap: 32px; align-items: start; }
+  @media (max-width: 900px) { .dash { grid-template-columns: 1fr; } }
+  .cont { border-top: 4px solid var(--blue); }
+  .cont h2 { margin: 0.8rem 0 1rem; font-size: 1.6rem; }
+  .cont .bar { margin-bottom: 0.4rem; }
+  .h { font-size: 1.3rem; margin: 2.5rem 0 1rem; }
+  .fo h3 { margin: 0.8rem 0; }
+  .mods { list-style: none; padding: 0; margin: 0; font-size: 0.92rem; }
+  .mods li { display: flex; justify-content: space-between; gap: 8px; padding: 0.45rem 0; border-bottom: 1px solid var(--line); margin: 0; }
+  .mods li.off { color: var(--muted); }
+  .mods em { font-style: normal; font-size: 0.78rem; color: var(--muted); }
+  .side { display: grid; gap: 16px; }
+  .h3 { font-size: 1.05rem; }
+  .side ol { margin: 0; color: var(--ink-2); font-size: 0.95rem; }
+  .reset { background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; justify-self: start; padding: 0; font: inherit; font-size: 0.85rem; }
+</style>

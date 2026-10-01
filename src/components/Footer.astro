@@ -1,0 +1,51 @@
+---
+import Logo from "./Logo.astro";
+import { FORMATIONS } from "../data/formations";
+---
+<footer class="site-footer ink-bg">
+  <div class="wrap cols">
+    <div>
+      <Logo inverse />
+      <p class="sig">Apprenez. Créez. Lancez-vous.</p>
+      <p class="small dim">Des formations en autonomie pour utiliser l'IA et les outils numériques, et créer vous-même votre projet, votre activité et votre communication.</p>
+    </div>
+    <div>
+      <h3>Formations</h3>
+      <ul>
+        {FORMATIONS.map((f) => <li><a href={`/formations/${f.slug}/`}>{f.titreCourt}</a></li>)}
+        <li><a href="/formations/">Toutes les formations</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>AroBaz</h3>
+      <ul>
+        <li><a href="/comment-ca-marche/">Comment ça marche</a></li>
+        <li><a href="/a-propos/">À propos</a></li>
+        <li><a href="/faq/">FAQ</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Élèves</h3>
+      <ul>
+        <li><a href="/espace/">Mon espace</a></li>
+        <li><a href="/espace/ia-business/module-1/">Module 1 : Comprendre l'IA</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap legal small dim">© {new Date().getFullYear()} AroBaz · <a href="/mentions-legales/">Mentions légales</a></div>
+</footer>
+<style>
+  .site-footer { padding: 72px 0 32px; margin-top: 0; }
+  .cols { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; }
+  @media (max-width: 860px) { .cols { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .cols { grid-template-columns: 1fr; } }
+  h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: #9ca3af; margin-bottom: 1rem; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li + li { margin-top: 0.5rem; }
+  a { color: #e5e7eb; text-decoration: none; }
+  a:hover { color: #fff; text-decoration: underline; }
+  .sig { font-family: var(--f-title); font-weight: 700; color: #fff; margin: 1rem 0 0.5rem; }
+  .dim { color: #9ca3af; }
+  .legal { border-top: 1px solid #1f2937; margin-top: 48px; padding-top: 24px; }
+</style>

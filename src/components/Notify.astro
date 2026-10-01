@@ -1,0 +1,16 @@
+---
+// Formulaire « Être informé du lancement » (géré par Netlify Forms, sans serveur)
+const { formation } = Astro.props as { formation: string };
+---
+<form name="lancement" method="POST" action="/merci/" data-netlify="true" netlify-honeypot="site-web" class="notify">
+  <input type="hidden" name="form-name" value="lancement" />
+  <input type="hidden" name="formation" value={formation} />
+  <p class="visually-hidden"><label>Ne pas remplir <input name="site-web" /></label></p>
+  <label for={`email-${formation}`} class="visually-hidden">Votre adresse e-mail</label>
+  <input id={`email-${formation}`} type="email" name="email" required placeholder="Votre adresse e-mail" autocomplete="email" />
+  <button class="btn btn-primary" type="submit">Être informé du lancement</button>
+</form>
+<style>
+  .notify { display: flex; gap: 10px; flex-wrap: wrap; }
+  .notify input[type="email"] { flex: 1 1 240px; border-radius: 999px; padding-inline: 1.2em; }
+</style>

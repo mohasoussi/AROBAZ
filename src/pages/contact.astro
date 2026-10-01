@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHead from "../components/PageHead.astro";
+import { FORMATIONS } from "../data/formations";
+---
+<BaseLayout title="Contact" description="Contacter AroBaz.">
+  <PageHead eyebrow="Contact" titre="Une question ? Écrivez-nous." lead="Nous répondons par e-mail, en général sous 48 heures ouvrées." />
+  <section class="section paper">
+    <div class="wrap-narrow">
+      <form name="contact" method="POST" action="/merci/" data-netlify="true" netlify-honeypot="site-web" class="form">
+        <input type="hidden" name="form-name" value="contact" />
+        <p class="visually-hidden"><label>Ne pas remplir <input name="site-web" /></label></p>
+        <div class="row">
+          <div><label for="c-nom">Votre nom</label><input id="c-nom" type="text" name="nom" required autocomplete="name" /></div>
+          <div><label for="c-email">Votre e-mail</label><input id="c-email" type="email" name="email" required autocomplete="email" /></div>
+        </div>
+        <div>
+          <label for="c-sujet">Sujet</label>
+          <select id="c-sujet" name="sujet">
+            {FORMATIONS.map((f) => <option>Formation {f.titreCourt}</option>)}
+            <option>Proposer un sujet de formation</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <div><label for="c-msg">Votre message</label><textarea id="c-msg" name="message" required rows="6"></textarea></div>
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .form { display: grid; gap: 1.2rem; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  @media (max-width: 600px) { .row { grid-template-columns: 1fr; } }
+  .form .btn { justify-self: start; }
+</style>

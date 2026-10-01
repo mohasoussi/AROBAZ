@@ -1,0 +1,51 @@
+---
+// Document de production vidéo : scripts complets (voix off + indications d'écran) du module 1.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { MODULE1, dureeNarration } from "../../data/module1";
+const lecons = MODULE1.lecons.map((l) => ({ l, d: dureeNarration(l) }));
+const totalMots = lecons.reduce((n, x) => n + x.d.mots, 0);
+---
+<BaseLayout title="Production · Module 1" noindex>
+  <div class="wrap page">
+    <span class="eyebrow">Document de production · usage interne</span>
+    <h1>Module 1 : scripts vidéo</h1>
+    <p class="lead">Narration complète et indications de réalisation, leçon par leçon. Durée de narration estimée à 140 mots/minute ; la durée finale de chaque vidéo sera plus longue (démonstrations à l'écran, pauses, exercices).</p>
+    <table class="recap">
+      <thead><tr><th>Leçon</th><th>Cible</th><th>Narration</th><th>Mots</th></tr></thead>
+      <tbody>
+        {lecons.map(({ l, d }) => (
+          <tr><td><a href={`#l${l.numero}`}>{l.numero}. {l.titre}</a></td><td>{l.dureeCible}</td><td>≈ {d.minutes} min</td><td>{d.mots}</td></tr>
+        ))}
+        <tr class="tot"><td>Total</td><td>80 à 107 min</td><td>≈ {Math.round(totalMots / 140)} min</td><td>{totalMots}</td></tr>
+      </tbody>
+    </table>
+    <p class="small muted">Imprimez cette page (Ctrl/Cmd + P) pour obtenir un PDF des scripts.</p>
+
+    {lecons.map(({ l, d }) => (
+      <section class="lec" id={`l${l.numero}`}>
+        <h2>Leçon {l.numero} · {l.titre}</h2>
+        <p class="muted">Durée cible : {l.dureeCible} · narration ≈ {d.minutes} min ({d.mots} mots) · {l.script.length} scènes</p>
+        <div class="scroll"><table class="script">
+          <thead><tr><th style="width:4%">#</th><th style="width:14%">Partie</th><th style="width:34%">À l'écran</th><th>Voix off</th></tr></thead>
+          <tbody>
+            {l.script.map((s, i) => (
+              <tr><td>{i + 1}</td><td><strong>{s.partie}</strong></td><td class="ecran">{s.ecran}</td><td>{s.voix}</td></tr>
+            ))}
+          </tbody>
+        </table></div>
+      </section>
+    ))}
+  </div>
+</BaseLayout>
+<style>
+  .page { padding-block: 40px 96px; }
+  table { width: 100%; border-collapse: collapse; background: var(--paper); font-size: 0.92rem; margin: 1.5rem 0 0.6rem; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 12px; border: 1px solid var(--line); }
+  th { background: var(--bg); font-family: var(--f-title); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .tot td { font-weight: 700; }
+  .lec { margin-top: 4rem; break-before: page; }
+  .ecran { color: var(--muted); font-size: 0.86rem; }
+  .scroll { overflow-x: auto; }
+  .script { min-width: 720px; }
+  @media print { :global(.site-header), :global(.site-footer) { display: none; } }
+</style>

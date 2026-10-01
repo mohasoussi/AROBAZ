@@ -1,0 +1,14 @@
+---
+const { eyebrow, titre, lead } = Astro.props as { eyebrow: string; titre: string; lead?: string };
+---
+<section class="ph">
+  <div class="wrap">
+    <span class="eyebrow">{eyebrow}</span>
+    <h1>{titre}</h1>
+    {lead && <p class="lead">{lead}</p>}
+  </div>
+</section>
+<style>
+  .ph { padding: clamp(48px, 7vw, 88px) 0 clamp(32px, 5vw, 56px); border-bottom: 1px solid var(--line); }
+  h1 { max-width: 16em; }
+</style>

@@ -1,0 +1,99 @@
+---
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import DemoNotice from "../../../../components/DemoNotice.astro";
+import { MODULE1, QUIZ_MODULE1, leconUrl } from "../../../../data/module1";
+---
+<BaseLayout title="Module 1 · Comprendre l'IA" noindex>
+  <DemoNotice />
+  <section class="top">
+    <div class="wrap">
+      <p class="crumbs small"><a href="/espace/">Mon espace</a> / IA & Business / Module 1</p>
+      <span class="eyebrow">IA & Business · Module 1</span>
+      <h1>{MODULE1.titre}</h1>
+      <p class="lead">{MODULE1.objectif}</p>
+      <div class="meta">
+        <span class="tag">Niveau : {MODULE1.niveau}</span>
+        <span class="tag tag-grey">Prérequis : {MODULE1.prerequis}</span>
+        <span class="tag tag-grey">{MODULE1.lecons.length} leçons + validation</span>
+      </div>
+      <div class="prog">
+        <div class="bar"><span data-bar></span></div>
+        <span class="small muted" data-txt>0 leçon terminée sur {MODULE1.lecons.length}</span>
+      </div>
+      <a href={leconUrl(MODULE1.lecons[0])} class="btn btn-primary" data-reprendre>Commencer le module</a>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap cols">
+      <ol class="lecons">
+        {MODULE1.lecons.map((l) => (
+          <li>
+            <a href={leconUrl(l)} class="card lc" data-id={`ia-business/${l.slug}`}>
+              <span class="n">{l.numero}</span>
+              <div>
+                <h3>{l.titre}</h3>
+                <p class="muted small">{l.sousTitre}</p>
+              </div>
+              <span class="d small muted">{l.dureeCible}</span>
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href="/espace/ia-business/module-1/validation/" class="card lc final" data-module="ia-business/module-1">
+            <span class="n">✓</span>
+            <div>
+              <h3>Validation du module</h3>
+              <p class="muted small">Quiz final de {QUIZ_MODULE1.length} questions et attestation de fin de module.</p>
+            </div>
+            <span class="d small muted">10 min</span>
+          </a>
+        </li>
+      </ol>
+      <aside class="card">
+        <h2 class="h3">À la fin de ce module, vous saurez :</h2>
+        <ul>{MODULE1.competences.map((c) => <li>{c}</li>)}</ul>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+<script>
+  import { lire } from "../../../../scripts/progress";
+  const e = lire();
+  const cartes = [...document.querySelectorAll<HTMLAnchorElement>(".lc[data-id]")];
+  let faites = 0;
+  let prochaine: HTMLAnchorElement | undefined;
+  cartes.forEach((c) => {
+    if (e.lecons[c.dataset.id!]?.terminee) { c.classList.add("fait"); faites++; }
+    else prochaine ??= c;
+  });
+  const m = document.querySelector<HTMLAnchorElement>(".lc[data-module]");
+  if (m && e.modules[m.dataset.module!]?.valide) m.classList.add("fait");
+  document.querySelector<HTMLElement>("[data-bar]")!.style.width = `${(faites / cartes.length) * 100}%`;
+  document.querySelector("[data-txt]")!.textContent = `${faites} leçon${faites > 1 ? "s" : ""} terminée${faites > 1 ? "s" : ""} sur ${cartes.length}`;
+  const btn = document.querySelector<HTMLAnchorElement>("[data-reprendre]")!;
+  if (faites > 0) {
+    btn.href = prochaine?.href ?? "/espace/ia-business/module-1/validation/";
+    btn.textContent = prochaine ? "Reprendre où j'en étais" : "Passer la validation";
+  }
+</script>
+<style>
+  .top { padding: 40px 0 48px; background: var(--paper); border-bottom: 1px solid var(--line); }
+  .crumbs { color: var(--muted); } .crumbs a { color: var(--muted); }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 1.2rem 0; }
+  .prog { display: grid; gap: 6px; max-width: 420px; margin-bottom: 1.6rem; }
+  .cols { display: grid; grid-template-columns: 1fr 340px; gap: 32px; align-items: start; }
+  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+  .lecons { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  .lecons li { margin: 0; }
+  .lc { display: grid; grid-template-columns: 44px 1fr auto; gap: 16px; align-items: center; padding: 18px 20px; }
+  .lc h3 { margin: 0 0 0.2rem; font-size: 1.08rem; }
+  .lc p { margin: 0; }
+  .n { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--blue-soft); color: var(--blue); font-family: var(--f-title); font-weight: 800; }
+  .lc.fait .n { background: var(--mint); color: #fff; font-size: 0; }
+  .lc.fait .n::after { content: "✓"; font-size: 1rem; }
+  .final .n { background: var(--ink); color: #fff; }
+  @media (max-width: 560px) { .lc { grid-template-columns: 40px 1fr; } .d { grid-column: 2; } }
+  .h3 { font-size: 1.1rem; }
+  aside ul { margin: 0; color: var(--ink-2); font-size: 0.95rem; }
+</style>

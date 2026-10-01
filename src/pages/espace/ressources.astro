@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import DemoNotice from "../../components/DemoNotice.astro";
+import { MODULE1, leconUrl } from "../../data/module1";
+const prompts = MODULE1.lecons.filter((l) => l.prompt).map((l) => ({ l, p: l.prompt! }));
+---
+<BaseLayout title="Mes ressources" noindex>
+  <DemoNotice />
+  <div class="wrap-narrow page">
+    <p class="small"><a href="/espace/">← Mon espace</a></p>
+    <span class="eyebrow">Mes ressources</span>
+    <h1>Vos prompts, prêts à copier</h1>
+    <p class="lead">Tous les prompts du module 1 réunis au même endroit. Gardez cette page sous la main.</p>
+    {prompts.map(({ l, p }) => (
+      <section class="res">
+        <p class="small muted">Leçon {l.numero} · <a href={leconUrl(l)}>{l.titre}</a></p>
+        <h2>{p.titre}</h2>
+        <div class="prompt">
+          <button type="button" class="btn btn-sm btn-light" data-copie>Copier</button>
+          <pre>{p.texte}</pre>
+        </div>
+        {p.conseil && <p class="small muted">{p.conseil}</p>}
+      </section>
+    ))}
+  </div>
+</BaseLayout>
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-copie]").forEach((b) =>
+    b.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(b.nextElementSibling!.textContent ?? ""); b.textContent = "Copié ✓"; }
+      catch { b.textContent = "Sélectionnez le texte"; }
+      setTimeout(() => (b.textContent = "Copier"), 2000);
+    }),
+  );
+</script>
+<style>
+  .page { padding-block: 40px 96px; }
+  .res { margin-top: 3rem; }
+  .res h2 { font-size: 1.35rem; }
+  .prompt { position: relative; background: var(--ink); border-radius: var(--radius); padding: 56px 22px 22px; margin-bottom: 0.8rem; }
+  .prompt pre { margin: 0; white-space: pre-wrap; font-family: var(--f-mono); font-size: 0.9rem; line-height: 1.6; color: #e5e7eb; }
+  .prompt .btn { position: absolute; top: 12px; right: 12px; }
+</style>

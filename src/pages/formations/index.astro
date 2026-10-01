@@ -1,0 +1,49 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { FORMATIONS } from "../../data/formations";
+---
+<BaseLayout title="Formations" description="Les formations AroBaz : IA & Business, et Contenu & Réseaux sociaux.">
+  <section class="section-tight">
+    <div class="wrap">
+      <span class="eyebrow">Formations</span>
+      <h1>Choisissez votre parcours.</h1>
+      <p class="lead">Deux parcours de 12 modules, pensés pour les débutants et suivis en autonomie. Chacun se termine par un projet concret : le vôtre.</p>
+    </div>
+  </section>
+  <section class="section-tight" style="padding-top:0">
+    <div class="wrap grid">
+      {FORMATIONS.map((f) => (
+        <a href={`/formations/${f.slug}/`} class={`card row ${f.couleur}`}>
+          <div>
+            <span class={`tag ${f.couleur === "coral" ? "tag-coral" : ""}`}>{f.titreCourt}</span>
+            <h2>{f.titre}</h2>
+            <p class="muted">{f.promesse}</p>
+            <span class="go">Voir le programme complet →</span>
+          </div>
+          <ol>
+            {f.modules.map((m) => <li><span>{String(m.numero).padStart(2, "0")}</span>{m.titre}</li>)}
+          </ol>
+        </a>
+      ))}
+      <div class="card future">
+        <span class="tag tag-grey">À venir</span>
+        <h3>Futures formations</h3>
+        <p class="muted">D'autres parcours sont en réflexion. Dites-nous ce que vous aimeriez apprendre : vos demandes orientent le catalogue.</p>
+        <a href="/contact/" class="btn btn-ghost btn-sm">Proposer un sujet</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .row { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; border-left: 4px solid var(--blue); }
+  .row.coral { border-left-color: var(--coral); }
+  @media (max-width: 860px) { .row { grid-template-columns: 1fr; } }
+  .row h2 { margin: 1rem 0 0.6rem; font-size: clamp(1.5rem, 3vw, 2rem); }
+  ol { list-style: none; padding: 0; margin: 0; columns: 2; column-gap: 24px; }
+  @media (max-width: 520px) { ol { columns: 1; } }
+  ol li { break-inside: avoid; margin: 0 0 0.55rem; font-size: 0.93rem; color: var(--ink-2); }
+  ol span { font-family: var(--f-title); font-weight: 800; color: var(--muted); margin-right: 0.6em; font-size: 0.8rem; }
+  .go { font-family: var(--f-title); font-weight: 700; color: var(--blue); }
+  .row.coral .go { color: var(--coral-ink); }
+  .future h3 { margin-top: 0.8rem; }
+</style>

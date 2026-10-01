@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHead from "../components/PageHead.astro";
+import { FORMATIONS } from "../data/formations";
+const generales = [
+  { q: "AroBaz, c'est pour qui ?", r: "Pour toute personne qui veut utiliser l'IA et les outils numériques pour créer elle-même : porteurs de projet, indépendants, commerçants, salariés en reconversion, étudiants. Aucune compétence technique n'est demandée." },
+  { q: "Les formations sont-elles en direct ?", r: "Non. Tout se suit en autonomie, à votre rythme : vidéos, démonstrations, exercices, prompts et quiz." },
+  { q: "Le module 1 est-il vraiment gratuit ?", r: "Oui. Le module 1 de la formation IA & Business est en accès libre, sans inscription. Votre progression est enregistrée dans votre navigateur." },
+  { q: "Ma progression est-elle sauvegardée ?", r: "Pour l'instant, elle est enregistrée dans le navigateur de l'appareil que vous utilisez. Si vous changez d'appareil ou effacez vos données de navigation, elle repart de zéro. Les comptes élèves, avec sauvegarde en ligne, arrivent prochainement." },
+  { q: "Est-ce que j'obtiens un certificat ?", r: "Chaque module validé donne droit à une attestation de fin de module. Il s'agit d'une attestation de suivi, pas d'un diplôme ni d'une certification professionnelle." },
+  { q: "Quand le parcours complet sera-t-il disponible ?", r: "Les modules suivants sont en préparation. Laissez votre e-mail sur la page de la formation pour être prévenu au lancement." },
+];
+---
+<BaseLayout title="FAQ" description="Questions fréquentes sur les formations AroBaz.">
+  <PageHead eyebrow="FAQ" titre="Questions fréquentes" />
+  <section class="section paper">
+    <div class="wrap-narrow">
+      <h2>Général</h2>
+      {generales.map((q) => <details><summary>{q.q}</summary><p>{q.r}</p></details>)}
+      {FORMATIONS.map((f) => (
+        <>
+          <h2 class="fh">{f.titreCourt}</h2>
+          {f.faq.map((q) => <details><summary>{q.q}</summary><p>{q.r}</p></details>)}
+        </>
+      ))}
+      <p class="more">Une autre question ? <a href="/contact/">Écrivez-nous</a>.</p>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .fh { margin-top: 3rem; }
+  details { border-bottom: 1px solid var(--line); padding: 1.1rem 0; }
+  summary { font-family: var(--f-title); font-weight: 700; cursor: pointer; font-size: 1.07rem; }
+  details p { margin: 0.8rem 0 0; color: var(--ink-2); }
+  .more { margin-top: 2.5rem; }
+</style>

@@ -1,0 +1,104 @@
+---
+import type { Question } from "../data/types";
+type Props = { id: string; questions: Question[]; seuil: number };
+const { id, questions, seuil } = Astro.props;
+const requis = Math.ceil(seuil * questions.length);
+---
+<div class="quiz" data-quiz={id} data-requis={requis} data-total={questions.length}>
+  {questions.map((q, i) => (
+    <fieldset class="q" data-bonne={q.bonne}>
+      <legend><span class="qn">Question {i + 1}/{questions.length}</span>{q.question}</legend>
+      <div class="choix">
+        {q.choix.map((c, j) => (
+          <label class="opt">
+            <input type="radio" name={`${id}-q${i}`} value={j} />
+            <span>{c}</span>
+          </label>
+        ))}
+      </div>
+      <p class="fb" hidden>
+        <strong class="fb-t"></strong> {q.explication}
+      </p>
+    </fieldset>
+  ))}
+  <div class="resultat" hidden>
+    <p class="score"></p>
+    <button type="button" class="btn btn-ghost btn-sm recommencer">Recommencer le quiz</button>
+  </div>
+  <p class="small muted">Réussite : {requis} bonne{requis > 1 ? "s" : ""} réponse{requis > 1 ? "s" : ""} sur {questions.length}. Chaque réponse est corrigée immédiatement.</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>(".quiz").forEach((quiz) => {
+    const total = Number(quiz.dataset.total);
+    const requis = Number(quiz.dataset.requis);
+    const qs = [...quiz.querySelectorAll<HTMLFieldSetElement>(".q")];
+    const resultat = quiz.querySelector<HTMLElement>(".resultat")!;
+    const score = quiz.querySelector<HTMLElement>(".score")!;
+
+    const bilan = () => {
+      const repondues = qs.filter((q) => q.dataset.repondu);
+      if (repondues.length < total) return;
+      const bonnes = qs.filter((q) => q.dataset.repondu === "ok").length;
+      const reussi = bonnes >= requis;
+      resultat.hidden = false;
+      resultat.classList.toggle("ok", reussi);
+      score.textContent = reussi
+        ? `Bravo : ${bonnes}/${total}. Quiz réussi.`
+        : `${bonnes}/${total}. Il faut ${requis} bonnes réponses : relisez les explications et recommencez.`;
+      quiz.dispatchEvent(new CustomEvent("quiz:fini", { bubbles: true, detail: { score: bonnes, total, reussi } }));
+    };
+
+    qs.forEach((q) => {
+      const bonne = Number(q.dataset.bonne);
+      q.addEventListener("change", (ev) => {
+        if (q.dataset.repondu) return;
+        const choix = Number((ev.target as HTMLInputElement).value);
+        const ok = choix === bonne;
+        q.dataset.repondu = ok ? "ok" : "ko";
+        q.querySelectorAll<HTMLInputElement>("input").forEach((inp, j) => {
+          inp.disabled = true;
+          if (j === bonne) inp.closest(".opt")!.classList.add("juste");
+          if (j === choix && !ok) inp.closest(".opt")!.classList.add("faux");
+        });
+        const fb = q.querySelector<HTMLElement>(".fb")!;
+        fb.hidden = false;
+        fb.classList.toggle("ok", ok);
+        fb.querySelector(".fb-t")!.textContent = ok ? "Exact." : "Pas tout à fait.";
+        bilan();
+      });
+    });
+
+    quiz.querySelector(".recommencer")!.addEventListener("click", () => {
+      qs.forEach((q) => {
+        delete q.dataset.repondu;
+        q.querySelectorAll<HTMLInputElement>("input").forEach((inp) => {
+          inp.disabled = false;
+          inp.checked = false;
+          inp.closest(".opt")!.classList.remove("juste", "faux");
+        });
+        q.querySelector<HTMLElement>(".fb")!.hidden = true;
+      });
+      resultat.hidden = true;
+      qs[0]?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  });
+</script>
+
+<style>
+  .q { border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); padding: 20px 22px; margin: 0 0 16px; }
+  legend { font-family: var(--f-title); font-weight: 700; font-size: 1.05rem; padding: 0; float: left; width: 100%; margin-bottom: 0.9rem; line-height: 1.4; }
+  .qn { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--blue); margin-bottom: 0.3rem; }
+  .choix { clear: both; display: grid; gap: 8px; }
+  .opt { display: flex; gap: 0.7rem; align-items: flex-start; font-weight: 400; margin: 0; padding: 0.7rem 0.9rem; border: 1.5px solid var(--line); border-radius: var(--radius-sm); cursor: pointer; transition: border-color 0.15s, background-color 0.15s; }
+  .opt:hover { border-color: var(--line-2); }
+  .opt input { margin-top: 0.3em; accent-color: var(--blue); }
+  .opt:has(input:disabled) { cursor: default; }
+  .opt.juste { border-color: var(--mint); background: var(--mint-soft); }
+  .opt.faux { border-color: var(--coral); background: var(--coral-soft); }
+  .fb { margin: 0.9rem 0 0; font-size: 0.95rem; padding: 0.7rem 0.9rem; border-radius: var(--radius-sm); background: var(--coral-soft); color: var(--ink-2); }
+  .fb.ok { background: var(--mint-soft); }
+  .resultat { border-radius: var(--radius); padding: 18px 22px; background: var(--coral-soft); margin-bottom: 12px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+  .resultat.ok { background: var(--mint-soft); }
+  .score { margin: 0; font-family: var(--f-title); font-weight: 700; }
+</style>

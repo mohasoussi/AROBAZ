@@ -1,0 +1,13 @@
+---
+const { inverse = false } = Astro.props as { inverse?: boolean };
+---
+<a href="/" class:list={["logo", { inverse }]} aria-label="AroBaz, accueil">
+  <span class="mark" aria-hidden="true">@</span><span class="word">Aro<b>Baz</b></span>
+</a>
+<style>
+  .logo { display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--ink); font-family: var(--f-title); font-weight: 700; font-size: 1.3rem; letter-spacing: -0.03em; }
+  .mark { width: 34px; height: 34px; border-radius: 10px; background: var(--blue); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 1.15rem; line-height: 1; padding-bottom: 2px; }
+  .word b { font-weight: 800; color: var(--blue); }
+  .inverse { color: #fff; }
+  .inverse .word b { color: #8fb0ff; }
+</style>
