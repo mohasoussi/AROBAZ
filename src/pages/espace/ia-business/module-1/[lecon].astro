@@ -22,7 +22,7 @@ for (const s of l.script) {
   else parties.push({ partie: s.partie, textes: [s.voix] });
 }
 ---
-<BaseLayout title={`Leçon ${l.numero} · ${l.titre}`} noindex>
+<BaseLayout title={l.titre} description={l.sousTitre}>
   <DemoNotice />
   <div class="wrap layout">
     <aside><ModuleNav actif={l.slug} /></aside>

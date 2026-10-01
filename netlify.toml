@@ -17,8 +17,3 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     X-Frame-Options = "SAMEORIGIN"
 
-# L'espace élève n'est pas indexé par les moteurs de recherche
-[[headers]]
-  for = "/espace/*"
-  [headers.values]
-    X-Robots-Tag = "noindex"

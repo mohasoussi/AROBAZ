@@ -13,9 +13,8 @@ const liens = [
   <div class="wrap bar-inner">
     <Logo />
     <nav aria-label="Navigation principale">
-      <input type="checkbox" id="menu-toggle" class="visually-hidden" />
-      <label for="menu-toggle" class="burger" aria-label="Ouvrir le menu"><span></span><span></span></label>
-      <ul>
+      <button type="button" class="burger" aria-expanded="false" aria-controls="menu-principal" aria-label="Ouvrir le menu"><span></span><span></span></button>
+      <ul id="menu-principal">
         {liens.map((l) => (
           <li><a href={l.href} aria-current={path.startsWith(l.href) ? "page" : undefined}>{l.label}</a></li>
         ))}
@@ -24,6 +23,23 @@ const liens = [
     </nav>
   </div>
 </header>
+<script>
+  const btn = document.querySelector<HTMLButtonElement>(".site-header .burger");
+  const nav = btn?.closest("nav");
+  const fermer = () => {
+    nav?.classList.remove("open");
+    btn?.setAttribute("aria-expanded", "false");
+    btn?.setAttribute("aria-label", "Ouvrir le menu");
+  };
+  btn?.addEventListener("click", () => {
+    const ouvert = nav!.classList.toggle("open");
+    btn.setAttribute("aria-expanded", String(ouvert));
+    btn.setAttribute("aria-label", ouvert ? "Fermer le menu" : "Ouvrir le menu");
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && nav?.classList.contains("open")) { fermer(); btn?.focus(); }
+  });
+</script>
 <style>
   .site-header { position: sticky; top: 0; z-index: 50; background: rgb(247 248 250 / 0.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
   .bar-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
@@ -33,14 +49,14 @@ const liens = [
   nav a:not(.btn):hover { color: var(--ink); background: #eef0f4; }
   nav a[aria-current="page"] { color: var(--blue); }
   .cta-li { margin-left: 0.5rem; }
-  .burger { display: none; }
+  .burger { display: none; background: none; border: 0; padding: 0; }
   @media (max-width: 900px) {
-    .burger { display: grid; gap: 6px; width: 44px; height: 44px; place-content: center; cursor: pointer; margin: 0; }
+    .burger { display: grid; gap: 6px; width: 44px; height: 44px; place-content: center; cursor: pointer; margin: 0; border-radius: 8px; }
     .burger span { display: block; width: 22px; height: 2px; background: var(--ink); border-radius: 2px; }
     nav ul { display: none; position: absolute; top: 72px; left: 0; right: 0; flex-direction: column; align-items: stretch; background: var(--paper); border-bottom: 1px solid var(--line); padding: 0.75rem var(--gutter) 1.25rem; box-shadow: var(--shadow-lg); }
     nav a:not(.btn) { display: block; padding: 0.8rem 0.5rem; }
     .cta-li { margin: 0.5rem 0 0; }
     .cta-li .btn { width: 100%; justify-content: center; }
-    #menu-toggle:checked ~ ul { display: flex; }
+    nav.open ul { display: flex; }
   }
 </style>

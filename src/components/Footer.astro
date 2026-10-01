@@ -10,14 +10,14 @@ import { FORMATIONS } from "../data/formations";
       <p class="small dim">Des formations en autonomie pour utiliser l'IA et les outils numériques, et créer vous-même votre projet, votre activité et votre communication.</p>
     </div>
     <div>
-      <h3>Formations</h3>
+      <h2>Formations</h2>
       <ul>
         {FORMATIONS.map((f) => <li><a href={`/formations/${f.slug}/`}>{f.titreCourt}</a></li>)}
         <li><a href="/formations/">Toutes les formations</a></li>
       </ul>
     </div>
     <div>
-      <h3>AroBaz</h3>
+      <h2>AroBaz</h2>
       <ul>
         <li><a href="/comment-ca-marche/">Comment ça marche</a></li>
         <li><a href="/a-propos/">À propos</a></li>
@@ -26,7 +26,7 @@ import { FORMATIONS } from "../data/formations";
       </ul>
     </div>
     <div>
-      <h3>Élèves</h3>
+      <h2>Élèves</h2>
       <ul>
         <li><a href="/espace/">Mon espace</a></li>
         <li><a href="/espace/ia-business/module-1/">Module 1 : Comprendre l'IA</a></li>
@@ -40,7 +40,7 @@ import { FORMATIONS } from "../data/formations";
   .cols { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; }
   @media (max-width: 860px) { .cols { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 520px) { .cols { grid-template-columns: 1fr; } }
-  h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: #9ca3af; margin-bottom: 1rem; }
+  h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: #9ca3af; margin-bottom: 1rem; }
   ul { list-style: none; padding: 0; margin: 0; }
   li + li { margin-top: 0.5rem; }
   a { color: #e5e7eb; text-decoration: none; }

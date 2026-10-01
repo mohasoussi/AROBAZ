@@ -2,6 +2,23 @@ import type { Lecon, Question } from "./types";
 import { LECONS_A } from "./module1-a";
 import { LECONS_B } from "./module1-b";
 
+/**
+ * Répartit la bonne réponse sur toutes les positions, de façon stable d'une
+ * construction à l'autre (le choix dépend du texte de la question), pour que
+ * « toujours B » ne soit pas une stratégie gagnante.
+ */
+function positionCible(texte: string, n: number) {
+  let h = 2166136261;
+  for (const c of texte) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+  return (h >>> 0) % n;
+}
+export function melanger(q: Question): Question {
+  const cible = positionCible(q.question, q.choix.length);
+  const autres = q.choix.filter((_, i) => i !== q.bonne);
+  const choix = [...autres.slice(0, cible), q.choix[q.bonne], ...autres.slice(cible)];
+  return { ...q, choix, bonne: cible };
+}
+
 export const MODULE1 = {
   formation: "ia-business",
   numero: 1,
@@ -9,7 +26,7 @@ export const MODULE1 = {
   niveau: "Débutant",
   prerequis: "Aucun",
   objectif: "Comprendre l'IA, savoir dialoguer efficacement avec elle et créer son premier assistant.",
-  lecons: [...LECONS_A, ...LECONS_B] as Lecon[],
+  lecons: [...LECONS_A, ...LECONS_B].map((l) => ({ ...l, quiz: l.quiz.map(melanger) })) as Lecon[],
   competences: [
     "Définir l'intelligence artificielle",
     "Définir l'IA générative",
@@ -26,7 +43,7 @@ export const MODULE1 = {
 };
 
 /** Quiz de validation du module (les 7 questions du programme). */
-export const QUIZ_MODULE1: Question[] = [
+const QUIZ_BRUT: Question[] = [
   {
     question: "Qu'est-ce que l'intelligence artificielle ?",
     choix: [
@@ -106,6 +123,8 @@ export const QUIZ_MODULE1: Question[] = [
     explication: "Fiscalité = vigilance maximale. Une deuxième réponse de l'IA n'est pas une vérification.",
   },
 ];
+
+export const QUIZ_MODULE1: Question[] = QUIZ_BRUT.map(melanger);
 
 const MOTS_PAR_MINUTE = 140;
 
