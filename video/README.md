@@ -3,8 +3,9 @@
 Chaîne qui transforme les scripts du site (`src/data/module1-*.ts`) en vidéo 1920×1080 :
 voix off française synthétique, animations calées sur chaque phrase, sous-titres incrustés.
 
-**Limites à connaître.** La voix est une voix de synthèse (Kokoro, modèle libre, une seule voix
-française disponible). Les scènes de « démonstration » sont des illustrations : elles ne remplacent
+**Limites à connaître.** `tts.py` produit une voix de synthèse libre (Kokoro, une seule voix
+française) : elle sert à tester, pas à publier. Pour une voix humaine, utiliser `pack_voix.py`
+puis `import_voix.py` (voix enregistrée par vous, ou générée par un service de voix). Les scènes de « démonstration » sont des illustrations : elles ne remplacent
 pas une vraie capture d'écran d'un outil. Voir `specs/` pour les scènes concernées.
 
 ## Utilisation (leçon N)
@@ -18,7 +19,9 @@ curl -LO https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-fil
 curl -LO https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
 cd ..
 npm run extraire              # scripts du site → build/lecons.json
-python tts.py N               # voix off + minutage → out/lecon-N/
+python tts.py N               # voix de synthèse (essai) → out/lecon-N/
+python pack_voix.py N         # textes à faire lire par une vraie voix → out/lecon-N/pack-voix/
+python import_voix.py N fichier-ou-dossier   # importe la voix enregistrée et retrouve le minutage
 node render.mjs N intro 0 1 2 …   # enregistre chaque scène (une par argument)
 ```
 

@@ -9,6 +9,7 @@ import numpy as np
 import soundfile as sf
 from pathlib import Path
 from kokoro_onnx import Kokoro
+from common import prononcer, phrases
 
 VOIX = "ff_siwis"
 VITESSE = 0.97          # légèrement posée : c'est une formation
@@ -16,22 +17,6 @@ PAUSE_PHRASE = 0.38     # s entre deux phrases
 PAUSE_VIRGULE = 0.0
 LEAD = 0.5              # s de silence avant la voix d'une scène
 TAIL = 1.0              # s après
-
-
-def prononcer(t: str) -> str:
-    """Aide la prononciation des sigles et du nom de marque."""
-    t = t.replace("AroBaz", "Arobaz")
-    t = re.sub(r"\bIA\b", "I.A.", t)
-    t = t.replace("C.O.C.C.F.", "C. O. C. C. F.")
-    t = t.replace("ChatGPT", "Chat G.P.T.")
-    t = t.replace("OpenAI", "Open I.A.")
-    t = t.replace("≠", " n'est pas ")
-    return t
-
-
-def phrases(texte: str):
-    morceaux = re.split(r"(?<=[.!?…])\s+(?=[A-ZÀÂÉÈÊÎÔÛÇ«\"“])", texte.strip())
-    return [m for m in morceaux if m.strip()]
 
 
 def main(num: int):
