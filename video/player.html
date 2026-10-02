@@ -55,12 +55,21 @@ const ic = (name, size = 60, color = "currentColor") => h("span", { class: "ic",
 
 let TIMING, T;
 // instant (s) auquel un extrait du texte est prononcé
+function tempsMot(p, i) {
+  // voix enregistrée : on connaît l'instant de chaque mot ; voix de synthèse : interpolation sur la phrase
+  if (p.reperes && p.reperes.length) {
+    let t = p.reperes[0][1];
+    for (const [pos, tt] of p.reperes) { if (pos <= i) t = tt; else break; }
+    return t;
+  }
+  return p.debut + (i / p.texte.length) * (p.fin - p.debut);
+}
 function cue(snippet, fallback = 0) {
   if (typeof snippet === "number") return snippet;
   const q = norm(snippet);
   for (const p of TIMING.phrases) {
     const t = norm(p.texte), i = t.indexOf(q);
-    if (i >= 0) return Math.max(0.2, p.debut + (i / t.length) * (p.fin - p.debut) - 0.12);
+    if (i >= 0) return Math.max(0.2, tempsMot(p, i) - 0.12);
   }
   warn.push("cue introuvable: " + snippet);
   return fallback;
@@ -268,15 +277,22 @@ function sousTitres(phrases) {
   const out = [];
   for (const p of phrases) {
     const mots = p.texte.split(/\s+/);
-    const chunks = []; let cur = "";
+    const chunks = []; let cur = "", curPos = -1, pos = 0;
     for (const m of mots) {
+      const mp = p.texte.indexOf(m, pos); pos = mp + m.length;
+      if (cur === "") curPos = mp;
       const next = cur ? cur + " " + m : m;
-      if (next.length > 60 && cur) { chunks.push(cur); cur = m; } else cur = next;
-      if (/[,;:]$/.test(m) && cur.length > 28) { chunks.push(cur); cur = ""; }
+      if (next.length > 60 && cur) { chunks.push({ cur, curPos }); cur = m; curPos = mp; } else cur = next;
+      if (/[,;:]$/.test(m) && cur.length > 28) { chunks.push({ cur, curPos }); cur = ""; }
     }
-    if (cur) chunks.push(cur);
-    const tot = chunks.reduce((n, c) => n + c.length, 0); let t = p.debut;
-    chunks.forEach((c) => { const d = ((p.fin - p.debut) * c.length) / tot; out.push({ texte: c.replace(/^\s+/, ""), debut: t, fin: t + d }); t += d; });
+    if (cur) chunks.push({ cur, curPos });
+    const tot = chunks.reduce((n, c) => n + c.cur.length, 0); let t = p.debut;
+    chunks.forEach((c, k) => {
+      let d0, d1;
+      if (p.reperes && p.reperes.length) { d0 = k === 0 ? p.debut : tempsMot(p, c.curPos); d1 = k + 1 < chunks.length ? tempsMot(p, chunks[k + 1].curPos) : p.fin; }
+      else { d0 = t; d1 = t + ((p.fin - p.debut) * c.cur.length) / tot; t = d1; }
+      out.push({ texte: c.cur.replace(/^\s+/, ""), debut: d0, fin: d1 });
+    });
   }
   return out;
 }

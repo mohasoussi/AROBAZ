@@ -21,7 +21,12 @@ cd ..
 npm run extraire              # scripts du site → build/lecons.json
 python tts.py N               # voix de synthèse (essai) → out/lecon-N/
 python pack_voix.py N         # textes à faire lire par une vraie voix → out/lecon-N/pack-voix/
-python import_voix.py N fichier-ou-dossier   # importe la voix enregistrée et retrouve le minutage
+python import_voix.py N fichier-ou-dossier   # voix enregistrée AVEC des pauses nettes entre phrases (minutage par les silences)
+
+# Voix enregistrée « librement » (cas général, tolère hésitations et petites variantes) :
+#   modèle de reconnaissance Whisper « small » : voir sherpa-onnx, release asr-models, dans models/stt/
+python transcrire.py enregistrement.m4a out/enreg-N.json   # transcription horodatée, hors ligne
+python aligner.py N out/enreg-N.json enregistrement.m4a    # aligne chaque mot du script sur la voix
 node render.mjs N intro 0 1 2 …   # enregistre chaque scène (une par argument)
 ```
 
