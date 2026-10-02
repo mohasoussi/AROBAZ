@@ -1,6 +1,6 @@
 """Logo AROBAZ retenu : piste « Le O cible », en bleu avec un point violet."""
 import generer as g
-BLEU, VIOLET, VIOLET_CLAIR = "#2457E6", "#7C3AED", "#A78BFA"
+BLEU, VIOLET, VIOLET_CLAIR = "#1E40AF", "#7C3AED", "#A78BFA"
 
 def o_special(couleur, point):
     def f(x, y, size):
