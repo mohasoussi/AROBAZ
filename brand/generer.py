@@ -6,6 +6,8 @@ from fontTools.pens.transformPen import TransformPen
 
 BLUE, MINT, CORAL, INK = "#2457E6", "#1AA982", "#F16B5B", "#111827"
 f = instantiateVariableFont(TTFont("../video/fonts/manrope.woff2"), {"wght": 800})
+from fontTools.ttLib.removeOverlaps import removeOverlaps
+removeOverlaps(f)
 gs, cmap, UPM = f.getGlyphSet(), f.getBestCmap(), f["head"].unitsPerEm
 
 def glyph(ch, x, y, size, fill):
@@ -14,7 +16,8 @@ def glyph(ch, x, y, size, fill):
     name = cmap[ord(ch)]
     pen = SVGPathPen(gs)
     gs[name].draw(TransformPen(pen, (s, 0, 0, -s, x, y)))
-    return f'<path d="{pen.getCommands()}" fill="{fill}"/>', gs[name].width * s
+    ctr = f' stroke="{CONTOUR}" stroke-width="{size*0.03:.2f}" stroke-linejoin="round"' if CONTOUR else ""
+    return f'<path d="{pen.getCommands()}" fill="{fill}"{ctr}/>', gs[name].width * s
 
 def mot(txt, x, y, size, fill, suivi=0.0, special=None):
     out, cx = [], x
@@ -30,6 +33,7 @@ def svg(w, h, body, fond=None):
     bg = f'<rect width="{w}" height="{h}" fill="{fond}"/>' if fond else ""
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}">{bg}{body}</svg>'
 
+CONTOUR = None
 cap = f["OS/2"].sCapHeight / UPM  # hauteur des capitales / em
 
 # ---------- Piste 1 : « De A à Z » — monogramme AZ relié par un trait
