@@ -26,7 +26,8 @@ python import_voix.py N fichier-ou-dossier   # voix enregistrée AVEC des pauses
 # Voix enregistrée « librement » (cas général, tolère hésitations et petites variantes) :
 #   modèle de reconnaissance Whisper « small » : voir sherpa-onnx, release asr-models, dans models/stt/
 python transcrire.py enregistrement.m4a out/enreg-N.json   # transcription horodatée, hors ligne
-python aligner.py N out/enreg-N.json enregistrement.m4a    # aligne chaque mot du script sur la voix
+python nettoyer_voix.py N enregistrement.m4a out/enreg-N.json out/voix-nettoyee.wav   # coupe respirations et déglutitions entre les phrases
+python aligner.py N out/enreg-N.json enregistrement.m4a out/voix-nettoyee.wav   # aligne chaque mot du script sur la voix (le minutage vient de l'original, le son de la version nettoyée)
 node render.mjs N intro 0 1 2 …   # enregistre chaque scène (une par argument)
 ```
 

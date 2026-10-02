@@ -83,7 +83,7 @@ def charger(chemin):
     return np.frombuffer(brut, dtype=np.float32).copy()
 
 
-def main(num, f_trans, f_audio):
+def main(num, f_trans, f_audio, f_net=None):
     lecon = next(l for l in json.load(open("build/lecons.json")) if l["numero"] == num)
     morceaux = json.load(open(f_trans))
 
@@ -129,6 +129,7 @@ def main(num, f_trans, f_audio):
         return meilleur[1] if meilleur[0] <= tol else t
 
     y = charger(f_audio)
+    yn = charger(f_net) if f_net else None   # voix nettoyée : sert au son, le minutage vient de l'original
     y *= min(1.0, 0.92 / float(np.abs(y).max()))   # évite l'écrêtage à l'écriture
     sortie = Path(f"out/lecon-{num}"); sortie.mkdir(parents=True, exist_ok=True)
     meta = {"numero": num, "titre": lecon["titre"], "scenes": []}
@@ -154,7 +155,7 @@ def main(num, f_trans, f_audio):
                 p1["fin"], p2["debut"] = m - 0.03, m + 0.03
         a, b = ph[0]["debut"] - 0.06, ph[-1]["fin"] + 0.10
         a = max(a, 0.0); b = min(b, len(y) / SR)
-        voix = y[int(a * SR): int(b * SR)].copy()
+        voix = (yn if yn is not None else y)[int(a * SR): int(b * SR)].copy()
         r = int(0.012 * SR)
         voix[:r] *= np.linspace(0, 1, r); voix[-r:] *= np.linspace(1, 0, r)
         wav = np.concatenate([np.zeros(int(LEAD * SR), np.float32), voix, np.zeros(int(TAIL * SR), np.float32)])
@@ -175,4 +176,4 @@ def main(num, f_trans, f_audio):
 
 
 if __name__ == "__main__":
-    main(int(sys.argv[1]), sys.argv[2], sys.argv[3])
+    main(int(sys.argv[1]), sys.argv[2], sys.argv[3], sys.argv[4] if len(sys.argv) > 4 else None)
