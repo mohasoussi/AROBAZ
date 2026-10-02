@@ -1,0 +1,28 @@
+<!doctype html><meta charset="utf-8"><style>
+@font-face{font-family:M;src:url(../video/fonts/manrope.woff2);font-weight:200 800}
+@font-face{font-family:D;src:url(../video/fonts/dmsans.woff2);font-weight:100 900}
+body{margin:0;background:#F7F8FA;font-family:D,sans-serif;color:#111827;width:1800px}
+h1{font:800 44px M;margin:0;letter-spacing:-.02em}
+header{padding:56px 72px 8px}header p{color:#6B7280;font-size:22px;margin:8px 0 0}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;padding:28px 72px 72px}
+.c{background:#fff;border:1px solid #E5E7EB;border-radius:22px;padding:36px}
+.c h2{font:800 24px M;margin:0 0 4px}.c .d{color:#6B7280;font-size:17px;line-height:1.45;margin:0 0 26px;min-height:75px}
+.lock{display:flex;align-items:center;gap:20px;padding:34px;border-radius:16px;margin-bottom:16px}
+.lock svg{width:92px;height:92px;flex:none}
+.w{font:800 48px M;letter-spacing:.02em;line-height:1}.s{font:600 15px D;letter-spacing:.22em;text-transform:uppercase;margin-top:10px;opacity:.75}
+.light{background:#fff;border:1px solid #E5E7EB}.dark{background:#111827;color:#fff}.blue{background:#2457E6;color:#fff}
+.mini{display:flex;gap:18px;align-items:center;margin-top:20px}.mini svg{display:block}
+</style>
+<header><h1>AROBAZ · 3 pistes de logo</h1><p>Organisme de formation · palette actuelle (bleu #2457E6, menthe #1AA982, corail #F16B5B, encre #111827) · typographie Manrope</p></header>
+<div class="row" id="r"></div>
+<script>
+const names=[["1 · Le @ qui monte","Un @ (clin d'œil à « Arrobase », le nom d'origine) dont la sortie devient une flèche : on se lance, on progresse. Le plus proche de l'identité actuelle du site."],
+["2 · Le A-livre","Un A fait de deux pages ouvertes, avec un chevron de progression. Le plus « organisme de formation » : sérieux, éditorial, lisible tout petit."],
+["3 · Les trois marches","Trois marches ascendantes, l'apprenant au sommet. Reprend les couleurs de la marque, sans lettre : le plus simple et le plus facile à décliner."]];
+Promise.all([1,2,3].map(i=>fetch(`logo-${i}-marque.svg`).then(r=>r.text()))).then(s=>{
+ r.innerHTML=names.map((n,i)=>`<div class="c"><h2>${n[0]}</h2><p class="d">${n[1]}</p>
+ <div class="lock light">${s[i]}<div><div class="w">AROBAZ</div><div class="s">Organisme de formation</div></div></div>
+ <div class="lock dark">${s[i]}<div><div class="w">AROBAZ</div><div class="s">Organisme de formation</div></div></div>
+ <div class="mini">${s[i].replace('<svg','<svg width="64" height="64"')}${s[i].replace('<svg','<svg width="32" height="32"')}${s[i].replace('<svg','<svg width="16" height="16"')}<span style="color:#6B7280;font-size:15px">64 · 32 · 16 px (favicon)</span></div></div>`).join("");
+ document.title="ok"});
+</script>
