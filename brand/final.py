@@ -1,6 +1,6 @@
 """Logo AROBAZ retenu : piste « Le O cible », en bleu avec un point violet."""
 import generer as g
-BLEU, VIOLET, VIOLET_CLAIR = "#1E40AF", "#7C3AED", "#A78BFA"
+BLEU, VIOLET, VIOLET_CLAIR = "#1E40AF", "#8A1FFF", "#B45CFF"
 
 def o_special(couleur, point):
     def f(x, y, size):
@@ -23,5 +23,5 @@ mot("#111827", VIOLET, "noir")             # secours monochrome-ish
 open("final/arobaz-marque.svg", "w").write(g.svg(100, 100,
     f'<rect width="100" height="100" rx="24" fill="{BLEU}"/>'
     f'<circle cx="50" cy="50" r="27" fill="none" stroke="#fff" stroke-width="12"/>'
-    f'<circle cx="50" cy="50" r="9" fill="#C4B5FD"/>'))
+    f'<circle cx="50" cy="50" r="9" fill="#B45CFF"/>'))
 print("ok")
