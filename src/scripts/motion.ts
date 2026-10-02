@@ -2,7 +2,8 @@
 // apparition au défilement, compteurs. Aucun effet si « réduire les animations » est activé.
 const calme = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const html = document.documentElement;
-const enEspace = /^\/(espace|production)\//.test(location.pathname);
+// pages d'apprentissage (leçons, validation…) : pas d'apparition au défilement, pour ne pas gêner la lecture
+const enEspace = /^\/(espace|production)\//.test(location.pathname) && !/^\/espace\/(ia-business\/module-\d+\/)?$/.test(location.pathname);
 
 // ---- En-tête + barre de progression + léger parallaxe du hero
 const entete = document.querySelector<HTMLElement>(".site-header");
@@ -43,7 +44,7 @@ if (!calme && !enEspace && "IntersectionObserver" in window) {
   const cibles = [
     ".hero .eyebrow", ".hero .lead", ".hero .actions", ".hero .small", ".hero-visual",
     ".head", "section h2", "section > .wrap > .eyebrow", ".grid > *", ".methode > li", ".stats > div", ".how > div",
-    ".modules > *", ".cta", ".band-inner", ".checks > li", ".needs > li", ".prose > *", "details", ".steps > li",
+    ".modules > *", ".lecons > li", ".dash .main > *", ".side > *", ".cta", ".band-inner", ".checks > li", ".needs > li", ".prose > *", "details", ".steps > li",
   ];
   const tous = new Set<HTMLElement>(cibles.flatMap((s) => [...document.querySelectorAll<HTMLElement>(`main ${s}`)]));
   // on garde l'élément le plus externe de chaque groupe
@@ -138,7 +139,7 @@ if (demo) {
 // ---- Titres de page : les mots montent un à un (titres sans balise interne seulement)
 if (!calme && !enEspace) {
   document.querySelectorAll<HTMLElement>("main h1:not(.titre-hero)").forEach((h) => {
-    if (h.children.length) return;
+    if (h.children.length || h.hasAttribute("data-bonjour")) return;
     const mots = (h.textContent ?? "").trim().split(/\s+/);
     h.setAttribute("aria-label", mots.join(" "));
     h.replaceChildren(...mots.flatMap((m, i) => {
@@ -184,3 +185,55 @@ document.querySelectorAll<HTMLDetailsElement>("details").forEach((d) => {
     }
   });
 });
+
+// ───────── Espace élève : célébrations ─────────
+function toast(texte: string) {
+  const t = document.createElement("div");
+  t.className = "toast";
+  t.setAttribute("role", "status");
+  t.textContent = texte;
+  document.body.append(t);
+  requestAnimationFrame(() => t.classList.add("on"));
+  setTimeout(() => { t.classList.remove("on"); setTimeout(() => t.remove(), 500); }, 3200);
+}
+
+function confettis(x: number, y: number, n = 70) {
+  if (calme) return;
+  const couleurs = ["#1E40AF", "#8A1FFF", "#1AA982", "#F16B5B", "#FBBF24"];
+  for (let i = 0; i < n; i++) {
+    const c = document.createElement("i");
+    c.className = "confetti";
+    const taille = 6 + Math.random() * 7;
+    c.style.cssText = `left:${x}px;top:${y}px;width:${taille}px;height:${taille * (Math.random() > 0.5 ? 1 : 0.45)}px;background:${couleurs[i % couleurs.length]};border-radius:${Math.random() > 0.6 ? "50%" : "2px"}`;
+    document.body.append(c);
+    const ang = -Math.PI / 2 + (Math.random() - 0.5) * 2.2;
+    const v = 220 + Math.random() * 380;
+    const dx = Math.cos(ang) * v, dy = Math.sin(ang) * v;
+    c.animate([
+      { transform: "translate(0,0) rotate(0deg)", opacity: 1 },
+      { transform: `translate(${dx * 0.7}px,${dy * 0.7}px) rotate(${Math.random() * 360}deg)`, opacity: 1, offset: 0.45 },
+      { transform: `translate(${dx}px,${dy + 420}px) rotate(${Math.random() * 720}deg)`, opacity: 0 },
+    ], { duration: 1500 + Math.random() * 900, easing: "cubic-bezier(0.2,0.7,0.4,1)" }).onfinish = () => c.remove();
+  }
+}
+const centre = (el: Element) => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2] as const; };
+
+// Quiz réussi
+document.addEventListener("quiz:fini", (e) => {
+  const d = (e as CustomEvent).detail;
+  if (!d?.reussi) return;
+  const cible = (e.target as HTMLElement).querySelector(".resultat") ?? e.target as HTMLElement;
+  const [x, y] = centre(cible);
+  const validation = location.pathname.endsWith("/validation/");
+  confettis(x, y, validation ? 140 : 60);
+  toast(validation ? "Module validé : bravo !" : `Quiz réussi : ${d.score}/${d.total}`);
+});
+
+// Leçon terminée
+document.querySelectorAll<HTMLButtonElement>("[data-terminer]").forEach((b) =>
+  b.addEventListener("click", () => {
+    if (b.disabled) return;
+    const [x, y] = centre(b);
+    setTimeout(() => { confettis(x, y, 80); toast("Leçon terminée ! Bien joué."); }, 60);
+  }),
+);
