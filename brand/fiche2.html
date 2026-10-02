@@ -1,0 +1,29 @@
+<!doctype html><meta charset="utf-8"><style>
+@font-face{font-family:M;src:url(../video/fonts/manrope.woff2);font-weight:200 800}
+@font-face{font-family:D;src:url(../video/fonts/dmsans.woff2);font-weight:100 900}
+body{margin:0;background:#F7F8FA;font-family:D,sans-serif;color:#111827;width:1800px}
+h1{font:800 44px M;margin:0}header{padding:56px 72px 8px}header p{color:#6B7280;font-size:22px;margin:8px 0 0}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;padding:28px 72px 72px}
+.c{background:#fff;border:1px solid #E5E7EB;border-radius:22px;padding:34px}
+.c h2{font:800 24px M;margin:0 0 4px}.c .d{color:#6B7280;font-size:17px;line-height:1.45;margin:0 0 22px;min-height:75px}
+.lock{display:flex;align-items:center;gap:22px;padding:30px 34px;border-radius:16px;margin-bottom:14px}
+.lock .m{width:100px;height:100px;flex:none}.lock .w{height:78px}.lock .w svg,.lock .m svg{height:100%;width:auto;display:block}
+.s{font:600 14px D;letter-spacing:.22em;text-transform:uppercase;margin-top:12px;opacity:.7}
+.light{background:#fff;border:1px solid #E5E7EB}.dark{background:#111827;color:#fff}
+.seul{padding:34px;border-radius:16px;margin-bottom:14px;background:#fff;border:1px solid #E5E7EB}.seul .w{height:84px}.seul svg{height:100%;width:auto}
+.mini{display:flex;gap:18px;align-items:center;margin-top:16px}.mini svg{display:block}
+</style>
+<header><h1>AROBAZ · 3 nouvelles pistes</h1><p>Lettres Manrope ExtraBold redessinées en tracés · palette de la marque</p></header>
+<div class="row" id="r"></div>
+<script>
+const N=[["1 · De A à Z","Le A et le Z accolés : la promesse d'une formation complète, de l'idée au lancement. Le nom contient déjà le A et le Z.","v2-1-mot"],
+["2 · Le O cible","Le O du nom devient un anneau avec un point d'arrivée. Typographique, sobre, très « organisme de formation ».","v2-2-mot"],
+["3 · Le parcours","Un chemin avec trois étapes qui monte vers une flèche : on avance pas à pas. Plus illustratif.","v2-3-mot"]];
+const g=u=>fetch(u).then(r=>r.text());
+Promise.all(N.flatMap((n,i)=>[g(`v2-${i+1}-marque.svg`),g(n[2]+"-clair.svg"),g(n[2]+"-sombre.svg")])).then(a=>{
+r.innerHTML=N.map((n,i)=>{const [m,wc,ws]=a.slice(i*3,i*3+3);return `<div class="c"><h2>${n[0]}</h2><p class="d">${n[1]}</p>
+<div class="lock light"><div class="m">${m}</div><div><div class="w">${wc}</div><div class="s">Organisme de formation</div></div></div>
+<div class="lock dark"><div class="m">${m}</div><div><div class="w">${ws}</div><div class="s">Organisme de formation</div></div></div>
+<div class="seul"><div class="w">${wc}</div></div>
+<div class="mini">${m.replace('<svg','<svg width="56" height="56"')}${m.replace('<svg','<svg width="32" height="32"')}${m.replace('<svg','<svg width="16" height="16"')}</div></div>`}).join("");document.title="ok"});
+</script>
