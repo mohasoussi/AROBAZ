@@ -43,7 +43,7 @@ if (!calme && !enEspace && "IntersectionObserver" in window) {
   const cibles = [
     ".hero .eyebrow", ".hero .lead", ".hero .actions", ".hero .small", ".hero-visual",
     ".head", "section h2", "section > .wrap > .eyebrow", ".grid > *", ".methode > li", ".stats > div", ".how > div",
-    ".modules > *", ".cta", ".band-inner", ".checks", ".faq details", "article.prose > *",
+    ".modules > *", ".cta", ".band-inner", ".checks > li", ".needs > li", ".prose > *", "details", ".steps > li",
   ];
   const tous = new Set<HTMLElement>(cibles.flatMap((s) => [...document.querySelectorAll<HTMLElement>(`main ${s}`)]));
   // on garde l'élément le plus externe de chaque groupe
@@ -134,3 +134,53 @@ if (demo) {
     }, { threshold: 0.35 }).observe(demo);
   }
 }
+
+// ---- Titres de page : les mots montent un à un (titres sans balise interne seulement)
+if (!calme && !enEspace) {
+  document.querySelectorAll<HTMLElement>("main h1:not(.titre-hero)").forEach((h) => {
+    if (h.children.length) return;
+    const mots = (h.textContent ?? "").trim().split(/\s+/);
+    h.setAttribute("aria-label", mots.join(" "));
+    h.replaceChildren(...mots.flatMap((m, i) => {
+      const o = document.createElement("span");
+      o.className = "mot"; o.setAttribute("aria-hidden", "true"); o.style.setProperty("--i", String(i));
+      const s = document.createElement("span"); s.textContent = m; o.append(s);
+      return i < mots.length - 1 ? [o, document.createTextNode(" ")] : [o];
+    }));
+  });
+}
+
+// ---- Page « Comment ça marche » : la ligne se remplit, l'étape courante s'allume
+const etapes = document.querySelector<HTMLElement>(".steps");
+if (etapes) {
+  const lis = [...etapes.querySelectorAll<HTMLElement>("li")];
+  const maj = () => {
+    const r = etapes.getBoundingClientRect();
+    const ligne = innerHeight * 0.55;
+    etapes.style.setProperty("--fill", String(Math.max(0, Math.min(1, (ligne - r.top) / r.height))));
+    lis.forEach((li) => li.classList.toggle("actif", li.getBoundingClientRect().top < ligne));
+  };
+  addEventListener("scroll", () => requestAnimationFrame(maj), { passive: true });
+  maj();
+}
+
+// ---- FAQ : ouverture et fermeture en douceur
+document.querySelectorAll<HTMLDetailsElement>("details").forEach((d) => {
+  const s = d.querySelector("summary");
+  if (!s || calme) return;
+  s.addEventListener("click", (e) => {
+    e.preventDefault();
+    const fin = () => { d.style.height = ""; d.dataset.anim = ""; };
+    if (d.dataset.anim) return;
+    d.dataset.anim = "1";
+    const h0 = d.offsetHeight;
+    if (d.open) {
+      const h1 = s.offsetHeight + parseFloat(getComputedStyle(d).paddingTop) + parseFloat(getComputedStyle(d).paddingBottom);
+      d.animate({ height: [`${h0}px`, `${h1}px`] }, { duration: 320, easing: "cubic-bezier(0.22,1,0.36,1)" }).onfinish = () => { d.open = false; fin(); };
+    } else {
+      d.open = true;
+      const h1 = d.offsetHeight;
+      d.animate({ height: [`${h0}px`, `${h1}px`] }, { duration: 380, easing: "cubic-bezier(0.22,1,0.36,1)" }).onfinish = fin;
+    }
+  });
+});

@@ -54,3 +54,69 @@ input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 4px rgb(36 87 230 
   html.js [data-reveal] { opacity: 1 !important; transform: none !important; }
   @view-transition { navigation: none; }
 }
+
+/* ───────── Pages intérieures ───────── */
+
+/* Titres de page : mots qui montent (le JS enveloppe les mots) */
+.mot { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.mot > span { display: inline-block; transform: translateY(110%); animation: monte 0.85s var(--ease) forwards; animation-delay: calc(var(--i, 0) * 55ms + 80ms); }
+@keyframes monte { to { transform: none; } }
+.ph { position: relative; overflow: hidden; }
+.ph::before { content: ""; position: absolute; z-index: -1; right: -120px; top: -160px; width: 460px; height: 460px; border-radius: 50%; background: radial-gradient(circle, #d8c4ff, transparent 70%); filter: blur(60px); opacity: 0.5; animation: derive2 18s ease-in-out infinite alternate; }
+@keyframes derive2 { to { transform: translate(-70px, 50px) scale(1.15); } }
+
+/* Soulignement dégradé sous les titres de section */
+.prose h2::after, .wrap-narrow > h2::after { content: ""; display: block; height: 3px; width: 0; margin-top: 0.5rem; border-radius: 3px; background: linear-gradient(90deg, #1e40af, #8a1fff); transition: width 0.9s var(--ease) 0.25s; }
+.prose h2.in::after, .wrap-narrow > h2.in::after { width: 56px; }
+
+/* Pastilles numérotées : rebond à l'apparition */
+.in .n, .n.in { animation: pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+@keyframes pop { from { transform: scale(0.4); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Pastille « Disponible » : point qui pulse */
+.tag-mint::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 0.45em; border-radius: 50%; background: var(--mint); animation: pulse2 2s ease-out infinite; vertical-align: middle; }
+@keyframes pulse2 { 0% { box-shadow: 0 0 0 0 rgb(26 169 130 / 0.6); } 100% { box-shadow: 0 0 0 9px rgb(26 169 130 / 0); } }
+
+/* Listes à coches : chaque ligne entre à son tour */
+.checks li { transition: transform 0.3s var(--ease); }
+.checks li:hover { transform: translateX(4px); }
+
+/* Page « Comment ça marche » : ligne de progression qui se remplit en défilant */
+.steps { position: relative; --fill: 0; }
+.steps::before { content: ""; position: absolute; left: 21px; top: 44px; bottom: 44px; width: 2px; background: var(--line); }
+.steps::after { content: ""; position: absolute; left: 21px; top: 44px; width: 2px; height: calc((100% - 88px) * var(--fill)); background: linear-gradient(#1e40af, #8a1fff); }
+.steps li { position: relative; }
+.steps .n { position: relative; z-index: 1; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.4s, box-shadow 0.5s; }
+.steps li:not(.actif) .n { background: #fff; color: var(--muted); box-shadow: inset 0 0 0 2px var(--line-2); }
+.steps li.actif .n { background: var(--blue); color: #fff; transform: scale(1.12); box-shadow: 0 0 0 6px rgb(36 87 230 / 0.15); }
+.steps li h2 { transition: color 0.4s; }
+.steps li:not(.actif) h2 { color: var(--muted); }
+
+/* Liste des formations : survol des lignes */
+a.row { transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.2s; }
+a.row:hover { box-shadow: 0 18px 40px -18px rgb(17 24 39 / 0.28), inset 6px 0 0 -2px var(--blue); }
+a.row.coral:hover { box-shadow: 0 18px 40px -18px rgb(17 24 39 / 0.28), inset 6px 0 0 -2px var(--coral); }
+a.row ol li { transition: transform 0.4s var(--ease), color 0.2s; }
+a.row:hover ol li { transform: translateX(5px); color: var(--ink); }
+a.row:hover ol li:nth-child(odd) { transition-delay: 30ms; }
+.go { display: inline-block; transition: transform 0.35s var(--ease); }
+a:hover .go, .go:hover { transform: translateX(6px); }
+
+/* FAQ : accordéon fluide */
+details { overflow: hidden; }
+summary { list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 1rem; transition: color 0.2s; }
+summary::-webkit-details-marker { display: none; }
+summary:hover { color: var(--blue); }
+summary::after { content: "+"; flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 1.3rem; line-height: 1; background: var(--blue-soft); color: var(--blue); transition: transform 0.4s var(--ease), background-color 0.3s, color 0.3s; }
+details[open] > summary::after { transform: rotate(135deg); background: var(--blue); color: #fff; }
+
+/* Pied de page : liens qui glissent */
+.site-footer a { transition: color 0.2s, transform 0.3s var(--ease); display: inline-block; }
+.site-footer a:hover { transform: translateX(3px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .mot > span { transform: none !important; }
+  .steps li:not(.actif) .n { background: var(--blue); color: #fff; box-shadow: none; }
+  .steps li:not(.actif) h2 { color: inherit; }
+  .prose h2::after, .wrap-narrow > h2::after { width: 56px; }
+}
