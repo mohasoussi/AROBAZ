@@ -41,7 +41,7 @@ if (!calme) {
 // ---- Apparition au défilement (pages vitrine seulement)
 if (!calme && !enEspace && "IntersectionObserver" in window) {
   const cibles = [
-    ".hero .eyebrow", ".hero h1", ".hero .lead", ".hero .actions", ".hero .small", ".hero-visual",
+    ".hero .eyebrow", ".hero .lead", ".hero .actions", ".hero .small", ".hero-visual",
     ".head", "section h2", "section > .wrap > .eyebrow", ".grid > *", ".methode > li", ".stats > div", ".how > div",
     ".modules > *", ".cta", ".band-inner", ".checks", ".faq details", "article.prose > *",
   ];
@@ -90,4 +90,47 @@ if (!calme && "IntersectionObserver" in window) {
     const t = el.textContent?.trim() ?? "";
     if (/^\d+$/.test(t)) { el.dataset.cible = t; cpt.observe(el); }
   });
+}
+
+// ---- Démo animée du hero : la demande se construit ligne par ligne, puis le résultat, puis la vérification
+const demo = document.querySelector<HTMLElement>("[data-demo]");
+if (demo) {
+  const lignes = [...demo.querySelectorAll<HTMLElement>(".demo-lines li")];
+  const envoi = demo.querySelector<HTMLElement>(".demo-send")!;
+  const res = demo.querySelector<HTMLElement>(".demo-result")!;
+  const verif = demo.querySelector<HTMLElement>(".demo-verif")!;
+  const etapes = [...verif.querySelectorAll<HTMLElement>("span")];
+  let minuteurs: number[] = [];
+  const at = (ms: number, f: () => void) => minuteurs.push(window.setTimeout(f, ms));
+  const tout = () => {
+    lignes.forEach((l) => l.classList.add("on")); res.classList.add("on"); verif.classList.add("on");
+    etapes.forEach((e) => e.classList.add("ok")); demo.classList.add("fin");
+  };
+  const reinit = () => {
+    minuteurs.forEach(clearTimeout); minuteurs = [];
+    demo.classList.remove("fin");
+    [...lignes, envoi, res, verif].forEach((e) => e.classList.remove("on", "press"));
+    etapes.forEach((e) => e.classList.remove("ok"));
+  };
+  const cycle = () => {
+    reinit();
+    lignes.forEach((l, i) => at(500 + i * 650, () => l.classList.add("on")));
+    at(4000, () => envoi.classList.add("on"));
+    at(4900, () => envoi.classList.add("press"));
+    at(5300, () => { envoi.classList.remove("press"); demo.classList.add("fin"); });
+    at(5600, () => res.classList.add("on"));
+    at(7000, () => verif.classList.add("on"));
+    etapes.forEach((e, i) => at(7400 + i * 650, () => e.classList.add("ok")));
+    at(12000, () => { res.classList.remove("on"); verif.classList.remove("on"); });
+    at(12900, cycle);
+  };
+  if (calme || !("IntersectionObserver" in window)) tout();
+  else {
+    let actif = false;
+    new IntersectionObserver((v) => {
+      const vu = v[0].isIntersecting;
+      if (vu && !actif) { actif = true; cycle(); }
+      else if (!vu && actif) { actif = false; reinit(); tout(); }
+    }, { threshold: 0.35 }).observe(demo);
+  }
 }

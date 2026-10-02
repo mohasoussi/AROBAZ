@@ -42,17 +42,8 @@ a.card:active { transform: translateY(-1px) scale(0.99); }
 html.js:not(.reveal-all) [data-reveal] { opacity: 0; transform: translateY(26px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); transition-delay: var(--d, 0ms); will-change: opacity, transform; }
 html.js:not(.reveal-all) [data-reveal].in { opacity: 1; transform: none; }
 
-/* Hero : mouvements d'ambiance */
+/* Hero : léger parallaxe de la démo */
 .hero-visual { transform: translateY(var(--py, 0px)); }
-.hero-visual .float { animation: floaty 6s ease-in-out infinite; }
-@keyframes floaty { 0%, 100% { translate: 0 0; } 50% { translate: 0 -9px; } }
-.hero-visual .play { position: absolute; }
-.hero-visual .play::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #fff; animation: pulse 2.4s ease-out infinite; }
-@keyframes pulse { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(1.9); opacity: 0; } }
-.lv-coccf span { transition: transform 0.3s var(--ease); }
-.lv-coccf span:hover { transform: translateY(-4px) scale(1.08); }
-.band-inner span { transition: color 0.2s, transform 0.3s var(--ease); display: inline-block; }
-.band-inner span:hover { color: var(--blue); transform: translateY(-2px); }
 
 /* Champs et cases : retour visuel au focus */
 input, textarea, select { transition: border-color 0.2s, box-shadow 0.25s var(--ease); }
