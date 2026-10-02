@@ -21,7 +21,7 @@ def mot(couleur, anneau, point, suffixe, contour=None):
     s, l = g.mot("AROBAZ", 0, 110/2 + g.cap*80/2 - 6, 80, couleur, suivi=0.02, special={"O": o_special(anneau, point, contour)})
     open(f"final/arobaz-logo-{suffixe}.svg", "w").write(g.svg(round(l) + 8, 110, f'<g transform="translate(4,0)">{s}</g>'))
 
-mot(BLEU, VIOLET, BLEU, "bleu", contour="#111827")   # fond clair : contour noir fin
+mot(BLEU, VIOLET, BLEU, "bleu")                   # fond clair
 mot("#FFFFFF", VIOLET_CLAIR, "#FFFFFF", "blanc")     # fond sombre : sans contour (invisible)
 mot("#111827", VIOLET, "#111827", "noir")
 
