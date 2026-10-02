@@ -1,4 +1,4 @@
-# AroBaz · Apprenez. Créez. Lancez-vous.
+# AROBAZ · Apprenez. Créez. Lancez-vous.
 
 Plateforme de formation en ligne : **IA & Business** et **Contenu & Réseaux sociaux**.
 Site statique construit avec [Astro](https://astro.build), hébergeable gratuitement sur Netlify.

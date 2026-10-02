@@ -3,26 +3,31 @@ import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import ModuleNav from "../../../../components/ModuleNav.astro";
 import DemoNotice from "../../../../components/DemoNotice.astro";
 import Quiz from "../../../../components/Quiz.astro";
-import { MODULE1, QUIZ_MODULE1 } from "../../../../data/module1";
-const ids = MODULE1.lecons.map((l) => `ia-business/${l.slug}`);
+import { MODULES, idLeconIA, idModuleIA, FORMATION_IA } from "../../../../data/curriculum";
+
+export function getStaticPaths() {
+  return MODULES.map((m) => ({ params: { module: m.slug }, props: { m } }));
+}
+const { m: MOD } = Astro.props as { m: (typeof MODULES)[number] };
+const ids = MOD.lecons.map(idLeconIA);
 ---
-<BaseLayout title="Validation du module 1" noindex>
+<BaseLayout title={`Validation du module ${MOD.numero}`} noindex>
   <DemoNotice />
   <div class="wrap layout">
-    <aside class="no-print"><ModuleNav actif="validation" /></aside>
-    <article data-ids={JSON.stringify(ids)}>
+    <aside class="no-print"><ModuleNav numero={MOD.numero} actif="validation" /></aside>
+    <article data-ids={JSON.stringify(ids)} data-cle={idModuleIA(MOD)}>
       <div class="no-print">
-        <span class="eyebrow">Module 1 · Validation</span>
+        <span class="eyebrow">Module {MOD.numero} · Validation</span>
         <h1>Validez vos acquis</h1>
-        <p class="lead">{QUIZ_MODULE1.length} questions sur l'ensemble du module. Il faut {Math.ceil(MODULE1.seuil * QUIZ_MODULE1.length)} bonnes réponses pour valider. Vous pouvez recommencer autant de fois que nécessaire.</p>
+        <p class="lead">{MOD.quiz.length} questions sur l'ensemble du module. Il faut {Math.ceil(MOD.seuil * MOD.quiz.length)} bonnes réponses pour valider. Vous pouvez recommencer autant de fois que nécessaire.</p>
 
         <div class="card checklist">
           <h2 class="h3">Avant de commencer : vous savez…</h2>
-          <ul>{MODULE1.competences.map((c) => <li>{c}</li>)}</ul>
+          <ul>{MOD.competences.map((c) => <li>{c}</li>)}</ul>
           <p class="small muted lecons-etat" data-lecons-etat></p>
         </div>
 
-        <Quiz id="quiz-module-1" questions={QUIZ_MODULE1} seuil={MODULE1.seuil} />
+        <Quiz id={`quiz-${MOD.slug}`} questions={MOD.quiz} seuil={MOD.seuil} />
       </div>
 
       <section class="attestation-zone" data-attestation hidden>
@@ -37,14 +42,14 @@ const ids = MODULE1.lecons.map((l) => `ia-business/${l.slug}`);
           <p class="small muted" data-manque hidden></p>
         </div>
         <div class="attestation">
-          <div class="att-logo"><span>@</span> AroBaz</div>
+          <div class="att-logo"><span>@</span> AROBAZ</div>
           <p class="att-kicker">Attestation de fin de module</p>
           <p class="att-nom" data-att-nom>Votre nom</p>
           <p>a suivi et validé le module</p>
-          <p class="att-titre">Module 1 · {MODULE1.titre}</p>
-          <p class="att-form">Formation « IA & Business : créer son projet avec l'IA »</p>
+          <p class="att-titre">Module {MOD.numero} · {MOD.titre}</p>
+          <p class="att-form">Formation « {FORMATION_IA.titreCourt} : {FORMATION_IA.titre} »</p>
           <p class="att-score">Quiz de validation réussi : <span data-att-score></span> · le <span data-att-date></span></p>
-          <p class="att-note">Attestation de suivi délivrée par AroBaz. Ce document n'est pas un diplôme ni une certification professionnelle.</p>
+          <p class="att-note">Attestation de suivi délivrée par AROBAZ. Ce document n'est pas un diplôme ni une certification professionnelle.</p>
         </div>
       </section>
     </article>
@@ -57,7 +62,7 @@ const ids = MODULE1.lecons.map((l) => `ia-business/${l.slug}`);
   const zone = document.querySelector<HTMLElement>("[data-attestation]")!;
   const nom = document.querySelector<HTMLInputElement>("#nom")!;
   const attNom = document.querySelector<HTMLElement>("[data-att-nom]")!;
-  const CLE = "ia-business/module-1";
+  const CLE = art.dataset.cle!;
 
   const faites = () => ids.filter((i) => lire().lecons[i]?.terminee).length;
   document.querySelector("[data-lecons-etat]")!.textContent = `Leçons terminées : ${faites()} sur ${ids.length}.`;
@@ -74,7 +79,7 @@ const ids = MODULE1.lecons.map((l) => `ia-business/${l.slug}`);
     const manque = ids.length - faites();
     const p = document.querySelector<HTMLElement>("[data-manque]")!;
     p.hidden = manque === 0;
-    p.textContent = `Conseil : il vous reste ${manque} leçon${manque > 1 ? "s" : ""} non terminée${manque > 1 ? "s" : ""}, dont la mission de la leçon 8. Le quiz est réussi, mais l'assistant, c'est ce qui vous servira vraiment.`;
+    p.textContent = `Conseil : il vous reste ${manque} leçon${manque > 1 ? "s" : ""} non terminée${manque > 1 ? "s" : ""}, dont la mission finale. Le quiz est réussi, mais ce sont les missions qui font avancer votre projet.`;
   };
   montrer();
 

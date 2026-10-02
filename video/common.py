@@ -4,7 +4,7 @@ import re
 
 def prononcer(t: str) -> str:
     """Texte « épelé » pour une voix de synthèse : sigles et noms de marque."""
-    t = t.replace("AroBaz", "Arobaz")
+    t = t.replace("AROBAZ", "Arobaz")
     t = re.sub(r"\bIA\b", "I.A.", t)
     t = t.replace("C.O.C.C.F.", "C. O. C. C. F.")
     t = t.replace("ChatGPT", "Chat G.P.T.")

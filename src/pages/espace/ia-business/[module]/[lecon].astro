@@ -3,17 +3,18 @@ import BaseLayout from "../../../../layouts/BaseLayout.astro";
 import ModuleNav from "../../../../components/ModuleNav.astro";
 import DemoNotice from "../../../../components/DemoNotice.astro";
 import Quiz from "../../../../components/Quiz.astro";
-import { MODULE1, leconUrl } from "../../../../data/module1";
-import type { Lecon } from "../../../../data/types";
+import { MODULES, leconUrl, validationUrl, idLeconIA, type LeconM } from "../../../../data/curriculum";
 
 export function getStaticPaths() {
-  return MODULE1.lecons.map((l, i) => ({
-    params: { lecon: l.slug },
-    props: { l, prec: MODULE1.lecons[i - 1], suiv: MODULE1.lecons[i + 1] },
-  }));
+  return MODULES.flatMap((m) =>
+    m.lecons.map((l, i) => ({
+      params: { module: m.slug, lecon: l.slug },
+      props: { l, m, prec: m.lecons[i - 1], suiv: m.lecons[i + 1] },
+    })),
+  );
 }
-const { l, prec, suiv } = Astro.props as { l: Lecon; prec?: Lecon; suiv?: Lecon };
-const id = `ia-business/${l.slug}`;
+const { l, m, prec, suiv } = Astro.props as { l: LeconM; m: (typeof MODULES)[number]; prec?: LeconM; suiv?: LeconM };
+const id = idLeconIA(l);
 // Parties du script regroupées pour la transcription (les scènes consécutives d'une même partie sont fusionnées)
 const parties: { partie: string; textes: string[] }[] = [];
 for (const s of l.script) {
@@ -25,12 +26,12 @@ for (const s of l.script) {
 <BaseLayout title={l.titre} description={l.sousTitre}>
   <DemoNotice />
   <div class="wrap layout">
-    <aside><ModuleNav actif={l.slug} /></aside>
+    <aside><ModuleNav numero={m.numero} actif={l.slug} /></aside>
 
     <article class="lecon" data-lecon={id}>
       <header>
-        <p class="crumbs small"><a href="/espace/">Mon espace</a> / <a href="/espace/ia-business/module-1/">Module 1</a> / Leçon {l.numero}</p>
-        <span class="eyebrow">Leçon {l.numero} sur {MODULE1.lecons.length} · {l.dureeCible}</span>
+        <p class="crumbs small"><a href="/espace/">Mon espace</a> / <a href={`/espace/ia-business/${m.slug}/`}>Module {m.numero}</a> / Leçon {l.numero}</p>
+        <span class="eyebrow">Leçon {l.numero} sur {m.lecons.length} · {l.dureeCible}</span>
         <h1>{l.titre}</h1>
         <p class="lead">{l.sousTitre}</p>
       </header>
@@ -134,7 +135,7 @@ for (const s of l.script) {
         {prec ? <a href={leconUrl(prec)} class="btn btn-ghost">← {prec.titre}</a> : <span></span>}
         {suiv
           ? <a href={leconUrl(suiv)} class="btn btn-primary">Leçon suivante : {suiv.titre} →</a>
-          : <a href="/espace/ia-business/module-1/validation/" class="btn btn-primary">Valider le module →</a>}
+          : <a href={validationUrl(m)} class="btn btn-primary">Valider le module →</a>}
       </nav>
     </article>
   </div>

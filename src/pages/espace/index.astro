@@ -2,8 +2,9 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import DemoNotice from "../../components/DemoNotice.astro";
 import { FORMATIONS } from "../../data/formations";
-import { MODULE1, leconUrl } from "../../data/module1";
-const lecons = MODULE1.lecons.map((l) => ({ id: `ia-business/${l.slug}`, url: leconUrl(l), titre: l.titre, numero: l.numero }));
+import { MODULES, TOUTES_LECONS, leconUrl, validationUrl, idLeconIA, idModuleIA } from "../../data/curriculum";
+const lecons = TOUTES_LECONS.map((l) => ({ id: idLeconIA(l), url: leconUrl(l), titre: l.titre, numero: l.numero, module: l.module }));
+const modules = MODULES.map((m) => ({ cle: idModuleIA(m), numero: m.numero, titre: m.titre, url: validationUrl(m), ids: m.lecons.map(idLeconIA) }));
 ---
 <BaseLayout title="Mon espace" noindex>
   <DemoNotice />
@@ -18,9 +19,9 @@ const lecons = MODULE1.lecons.map((l) => ({ id: `ia-business/${l.slug}`, url: le
   <section class="section-tight">
     <div class="wrap dash">
       <div class="main">
-        <div class="card cont" data-lecons={JSON.stringify(lecons)}>
-          <span class="tag">IA & Business · Module 1</span>
-          <h2>{MODULE1.titre}</h2>
+        <div class="card cont" data-lecons={JSON.stringify(lecons)} data-modules={JSON.stringify(modules)}>
+          <span class="tag" data-tag>IA & Business · Module 1</span>
+          <h2>Formation IA & Business</h2>
           <div class="bar"><span data-bar></span></div>
           <p class="small muted" data-txt></p>
           <a class="btn btn-primary" href={lecons[0].url} data-suite>Commencer</a>
@@ -52,12 +53,12 @@ const lecons = MODULE1.lecons.map((l) => ({ id: `ia-business/${l.slug}`, url: le
         </div>
         <div class="card">
           <h2 class="h3">Mes ressources</h2>
-          <p class="small muted">Les prompts du module, prêts à copier : votre assistant, le gabarit C.O.C.C.F., les questions de vérification.</p>
+          <p class="small muted">Les prompts de la formation, prêts à copier : votre assistant, le gabarit C.O.C.C.F., les questions de vérification.</p>
           <a href="/espace/ressources/" class="btn btn-ghost btn-sm">Ouvrir mes ressources</a>
         </div>
         <div class="card">
           <h2 class="h3">Mes attestations</h2>
-          <div data-attestations><p class="small muted">Aucune pour l'instant. Validez le module 1 pour obtenir votre première attestation.</p></div>
+          <div data-attestations><p class="small muted">Aucune pour l'instant. Validez un module pour obtenir votre première attestation.</p></div>
         </div>
         <button type="button" class="reset small" data-reset>Effacer ma progression sur cet appareil</button>
       </aside>
@@ -70,14 +71,19 @@ const lecons = MODULE1.lecons.map((l) => ({ id: `ia-business/${l.slug}`, url: le
   if (e.prenom) document.querySelector("[data-bonjour]")!.textContent = `Bonjour ${e.prenom.split(" ")[0]} !`;
 
   const box = document.querySelector<HTMLElement>("[data-lecons]")!;
-  const lecons: { id: string; url: string; titre: string; numero: number }[] = JSON.parse(box.dataset.lecons!);
+  const lecons: { id: string; url: string; titre: string; numero: number; module: number }[] = JSON.parse(box.dataset.lecons!);
+  const modules: { cle: string; numero: number; titre: string; url: string; ids: string[] }[] = JSON.parse(box.dataset.modules!);
   const faites = lecons.filter((l) => e.lecons[l.id]?.terminee).length;
   const suite = lecons.find((l) => !e.lecons[l.id]?.terminee);
   box.querySelector<HTMLElement>("[data-bar]")!.style.width = `${(faites / lecons.length) * 100}%`;
   box.querySelector("[data-txt]")!.textContent = `${faites} leçon${faites > 1 ? "s" : ""} terminée${faites > 1 ? "s" : ""} sur ${lecons.length}`;
   const btn = box.querySelector<HTMLAnchorElement>("[data-suite]")!;
-  if (suite && faites > 0) { btn.href = suite.url; btn.textContent = `Continuer : leçon ${suite.numero} · ${suite.titre}`; }
-  if (!suite) { btn.href = "/espace/ia-business/module-1/validation/"; btn.textContent = e.modules["ia-business/module-1"]?.valide ? "Voir mon attestation" : "Passer la validation du module"; }
+  if (suite && faites > 0) {
+    btn.href = suite.url;
+    btn.textContent = `Continuer : module ${suite.module}, leçon ${suite.numero} · ${suite.titre}`;
+    box.querySelector("[data-tag]")!.textContent = `IA & Business · Module ${suite.module}`;
+  }
+  if (!suite) { btn.href = modules[modules.length - 1].url; btn.textContent = "Passer la validation du dernier module"; }
 
   const objectifs = Object.values(e.lecons[lecons[0].id]?.exercice ?? {}).filter((v) => v.trim());
   if (objectifs.length) {
@@ -85,12 +91,18 @@ const lecons = MODULE1.lecons.map((l) => ({ id: `ia-business/${l.slug}`, url: le
     objectifs.forEach((o) => { const li = document.createElement("li"); li.textContent = o; ul.append(li); });
     document.querySelector("[data-objectifs]")!.replaceChildren(ul);
   }
-  const m = e.modules["ia-business/module-1"];
-  if (m?.valide) {
-    const a = document.createElement("a");
-    a.href = "/espace/ia-business/module-1/validation/";
-    a.textContent = `Module 1 · Comprendre l'IA (${m.score}/${m.total})`;
-    document.querySelector("[data-attestations]")!.replaceChildren(a);
+  const valides = modules.filter((m) => e.modules[m.cle]?.valide);
+  if (valides.length) {
+    const ul = document.createElement("ul");
+    valides.forEach((m) => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = m.url;
+      a.textContent = `Module ${m.numero} · ${m.titre} (${e.modules[m.cle].score}/${e.modules[m.cle].total})`;
+      li.append(a);
+      ul.append(li);
+    });
+    document.querySelector("[data-attestations]")!.replaceChildren(ul);
   }
   document.querySelector("[data-reset]")!.addEventListener("click", () => {
     if (confirm("Effacer toute votre progression, vos exercices et vos résultats sur cet appareil ?")) { reinitialiser(); location.reload(); }

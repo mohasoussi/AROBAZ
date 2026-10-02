@@ -238,7 +238,7 @@ export const LECONS_B: Lecon[] = [
         partie: "Explication",
         ecran: "Les cinq lettres C, O, C, C, F apparaissent en colonne, chacune avec son mot et une question : Contexte (Qui suis-je ? Quelle situation ?), Objectif (Que dois-je obtenir ?), Cible (Pour qui ?), Contraintes (Quelles règles ?), Format (Sous quelle forme ?).",
         voix:
-          "Pour éviter ça, voici la méthode AroBaz, en cinq lettres : C, O, C, C, F. C comme Contexte : qui êtes-vous, quelle est votre situation ? O comme Objectif : que voulez-vous obtenir, exactement ? C comme Cible : à qui s'adresse le résultat ? Un client, un banquier, un enfant de dix ans ? C comme Contraintes : la longueur, le ton, ce qu'il faut absolument inclure, ce qu'il faut éviter. Et F comme Format : une liste, un tableau, un mail, un script de vidéo, un plan. Cinq questions. Si votre prompt y répond, l'IA a tout ce qu'il lui faut.",
+          "Pour éviter ça, voici la méthode AROBAZ, en cinq lettres : C, O, C, C, F. C comme Contexte : qui êtes-vous, quelle est votre situation ? O comme Objectif : que voulez-vous obtenir, exactement ? C comme Cible : à qui s'adresse le résultat ? Un client, un banquier, un enfant de dix ans ? C comme Contraintes : la longueur, le ton, ce qu'il faut absolument inclure, ce qu'il faut éviter. Et F comme Format : une liste, un tableau, un mail, un script de vidéo, un plan. Cinq questions. Si votre prompt y répond, l'IA a tout ce qu'il lui faut.",
       },
       {
         partie: "Exemple concret",
@@ -384,7 +384,7 @@ Avant de répondre, pose-moi les questions dont tu as besoin si une information 
           "Droit, fiscalité, santé, finance, actualité, et chiffres importants. Dans ces domaines, une erreur peut coûter cher : vérifiez auprès d'une source officielle ou d'un professionnel.",
       },
       {
-        titre: "La règle AroBaz",
+        titre: "La règle AROBAZ",
         texte: "UTILISER → VÉRIFIER → DÉCIDER. L'IA vous fait gagner du temps sur le travail, mais la décision et la responsabilité restent les vôtres.",
       },
     ],
@@ -429,7 +429,7 @@ Avant de répondre, pose-moi les questions dont tu as besoin si une information 
         partie: "Méthode",
         ecran: "Trois grandes étapes : UTILISER (l'IA prépare, résume, propose) → VÉRIFIER (sources, cohérence, chiffres) → DÉCIDER (vous, en connaissance de cause).",
         voix:
-          "D'où la règle AroBaz, à appliquer avant toute décision importante : Utiliser, Vérifier, Décider. Utiliser : l'IA prépare, résume, propose. Elle vous fait gagner un temps énorme. Vérifier : les chiffres, les sources, la cohérence. Et Décider : c'est vous, en connaissance de cause. L'IA est un assistant. Elle n'est jamais responsable à votre place.",
+          "D'où la règle AROBAZ, à appliquer avant toute décision importante : Utiliser, Vérifier, Décider. Utiliser : l'IA prépare, résume, propose. Elle vous fait gagner un temps énorme. Vérifier : les chiffres, les sources, la cohérence. Et Décider : c'est vous, en connaissance de cause. L'IA est un assistant. Elle n'est jamais responsable à votre place.",
       },
       {
         partie: "Astuce",
@@ -487,7 +487,7 @@ Où puis-je vérifier ces informations auprès d'une source officielle ?`,
         explication: "L'IA peut se tromper avec beaucoup d'assurance. Le style ne prouve rien.",
       },
       {
-        question: "Quelle est la règle AroBaz avant de prendre une décision importante ?",
+        question: "Quelle est la règle AROBAZ avant de prendre une décision importante ?",
         choix: ["Demander → Copier → Publier", "Utiliser → Vérifier → Décider", "Vérifier → Utiliser → Oublier"],
         bonne: 1,
         explication: "L'IA prépare, vous vérifiez, et c'est vous qui décidez.",
@@ -516,7 +516,7 @@ Où puis-je vérifier ces informations auprès d'une source officielle ?`,
     dureeCible: "15 à 20 min",
     objectifs: [
       "Choisir le rôle de votre assistant",
-      "Le configurer avec le prompt AroBaz, adapté à votre projet",
+      "Le configurer avec le prompt AROBAZ, adapté à votre projet",
       "Le tester en quatre étapes et l'améliorer",
     ],
     essentiel: [
@@ -552,7 +552,7 @@ Où puis-je vérifier ces informations auprès d'une source officielle ?`,
         partie: "Objectif",
         ecran: "Titre de la mission. Trois étapes : Choisir → Configurer → Tester.",
         voix:
-          "Cette leçon est une mission. On va la faire ensemble, étape par étape. Vous allez choisir le rôle de votre assistant, le configurer avec le prompt AroBaz adapté à votre projet, puis le tester en quatre étapes. À la fin, vous aurez un véritable outil de travail, que vous utiliserez dans tous les modules suivants.",
+          "Cette leçon est une mission. On va la faire ensemble, étape par étape. Vous allez choisir le rôle de votre assistant, le configurer avec le prompt AROBAZ adapté à votre projet, puis le tester en quatre étapes. À la fin, vous aurez un véritable outil de travail, que vous utiliserez dans tous les modules suivants.",
       },
       {
         partie: "Étape 1 — Choisir",
@@ -562,9 +562,9 @@ Où puis-je vérifier ces informations auprès d'une source officielle ?`,
       },
       {
         partie: "Étape 2 — Configurer",
-        ecran: "Le prompt AroBaz s'affiche en entier. Les champs entre crochets clignotent en bleu : [DOMAINE], [OBJECTIF], [DÉCRIVEZ VOTRE PROJET], [DÉCRIVEZ VOTRE PUBLIC], [NIVEAU].",
+        ecran: "Le prompt AROBAZ s'affiche en entier. Les champs entre crochets clignotent en bleu : [DOMAINE], [OBJECTIF], [DÉCRIVEZ VOTRE PROJET], [DÉCRIVEZ VOTRE PUBLIC], [NIVEAU].",
         voix:
-          "Deuxième étape : la configuration. Voici le prompt AroBaz. Vous le trouverez sous cette vidéo, prêt à copier. Il commence par cinq informations à compléter : le domaine de spécialité de votre assistant, son rôle, votre projet, votre public cible et votre niveau. Vous reconnaissez la méthode de la leçon six : c'est du contexte, un objectif et une cible. Ensuite viennent les règles de travail. Commencer par comprendre votre besoin. Répondre simplement. Éviter le jargon. Donner des exemples concrets. Proposer des actions réalisables. Et deux règles essentielles, qui viennent directement de la leçon sept : indiquer clairement quand il n'est pas certain, et ne pas inventer d'informations. Enfin, deux réflexes : présenter les différences quand plusieurs solutions existent, et vous poser des questions quand il manque une information importante.",
+          "Deuxième étape : la configuration. Voici le prompt AROBAZ. Vous le trouverez sous cette vidéo, prêt à copier. Il commence par cinq informations à compléter : le domaine de spécialité de votre assistant, son rôle, votre projet, votre public cible et votre niveau. Vous reconnaissez la méthode de la leçon six : c'est du contexte, un objectif et une cible. Ensuite viennent les règles de travail. Commencer par comprendre votre besoin. Répondre simplement. Éviter le jargon. Donner des exemples concrets. Proposer des actions réalisables. Et deux règles essentielles, qui viennent directement de la leçon sept : indiquer clairement quand il n'est pas certain, et ne pas inventer d'informations. Enfin, deux réflexes : présenter les différences quand plusieurs solutions existent, et vous poser des questions quand il manque une information importante.",
       },
       {
         partie: "Démonstration",
@@ -612,7 +612,7 @@ Où puis-je vérifier ces informations auprès d'une source officielle ?`,
     exercice: {
       titre: "Votre assistant, configuré et testé",
       consigne:
-        "Complétez le prompt AroBaz pour votre projet, utilisez-le dans votre assistant IA, puis réalisez les quatre tests. Notez ce que vous retenez de chaque test et les améliorations apportées au prompt.",
+        "Complétez le prompt AROBAZ pour votre projet, utilisez-le dans votre assistant IA, puis réalisez les quatre tests. Notez ce que vous retenez de chaque test et les améliorations apportées au prompt.",
       champs: [
         { label: "Rôle choisi pour mon assistant", aide: "Entrepreneur, commercial, marketing, communication, créateur de contenu, administratif…" },
         { label: "Mon prompt complété (domaine, objectif, projet, public, niveau)" },
@@ -624,7 +624,7 @@ Où puis-je vérifier ces informations auprès d'une source officielle ?`,
       ],
     },
     prompt: {
-      titre: "Le prompt AroBaz de votre assistant",
+      titre: "Le prompt AROBAZ de votre assistant",
       texte: PROMPT_ASSISTANT,
       conseil: "Remplacez chaque [CROCHET] par vos informations, puis enregistrez le prompt dans vos notes. Vous le réutiliserez dans tous les modules.",
     },

@@ -1,4 +1,4 @@
-// Catalogue AroBaz : les deux parcours et leurs 12 modules.
+// Catalogue AROBAZ : les deux parcours et leurs 12 modules.
 // `disponible` = module jouable dans l'espace élève.
 
 export type Module = {
@@ -69,6 +69,7 @@ export const FORMATIONS: Formation[] = [
         resume: "Clarifier l'idée, le problème, le client, le marché et l'offre, avec l'IA comme partenaire de réflexion.",
         points: ["Problème et client", "Étude de marché avec l'IA", "Concurrence", "Proposition de valeur", "Modèle économique"],
         livrable: "La fiche projet d'une page",
+        disponible: true,
       },
       {
         numero: 3,
@@ -76,6 +77,7 @@ export const FORMATIONS: Formation[] = [
         resume: "Nom, slogan, positionnement et identité visuelle cohérente, générés puis affinés avec l'IA.",
         points: ["Nom et slogan", "Positionnement", "Logo", "Couleurs et typographies", "Présentation commerciale"],
         livrable: "Votre mini-charte de marque",
+        disponible: true,
       },
       {
         numero: 4,
@@ -83,6 +85,7 @@ export const FORMATIONS: Formation[] = [
         resume: "Domaine, hébergement, DNS, front, back, API : comprendre sans devenir développeur.",
         points: ["Site, domaine, hébergement", "Frontend et backend", "Base de données et API", "DNS et HTTPS"],
         livrable: "Le schéma de votre futur site",
+        disponible: true,
       },
       {
         numero: 5,
@@ -90,6 +93,7 @@ export const FORMATIONS: Formation[] = [
         resume: "Du brief au site responsive : générer, comprendre et modifier le code avec l'IA.",
         points: ["Rédiger le brief", "Générer le design et le code", "Comprendre les fichiers", "Formulaires, images, mobile"],
         livrable: "Votre site, fonctionnel en local",
+        disponible: true,
       },
       {
         numero: 6,
@@ -97,6 +101,7 @@ export const FORMATIONS: Formation[] = [
         resume: "Mettre le site en ligne sur votre nom de domaine, proprement et en sécurité.",
         points: ["Compte et dépôt GitHub", "Déploiement Netlify", "Nom de domaine et DNS", "Sécurité Cloudflare"],
         livrable: "Votre site en ligne sur votre domaine",
+        disponible: true,
       },
       {
         numero: 7,
@@ -104,6 +109,7 @@ export const FORMATIONS: Formation[] = [
         resume: "Catalogue, prix, panier, paiement, commandes, livraison et obligations légales.",
         points: ["Modèle e-commerce", "Fiches produits", "Paiement et commandes", "Livraison", "Mentions légales et RGPD"],
         livrable: "Une boutique prête à encaisser",
+        disponible: true,
       },
       {
         numero: 8,
@@ -111,6 +117,7 @@ export const FORMATIONS: Formation[] = [
         resume: "De l'idée de fonctionnalité au prototype déployé, avec base de données et connexion.",
         points: ["Fonctionnalités et UX", "Prototype", "Développement assisté par IA", "Authentification", "Tests et déploiement"],
         livrable: "Une application web en ligne",
+        disponible: true,
       },
       {
         numero: 9,
@@ -118,6 +125,7 @@ export const FORMATIONS: Formation[] = [
         resume: "API, webhooks, CRM, connecteurs et agents : faire travailler vos outils ensemble.",
         points: ["API et webhooks", "Formulaires et emails", "Paiements et CRM", "Connecteurs et agents"],
         livrable: "La carte de vos outils connectés",
+        disponible: true,
       },
       {
         numero: 10,
@@ -125,6 +133,7 @@ export const FORMATIONS: Formation[] = [
         resume: "Des scénarios concrets qui tournent seuls, de la demande client à la facture.",
         points: ["Formulaire → IA → email → CRM", "Commande → paiement → facture", "Idée → contenu → publication"],
         livrable: "Trois automatisations actives",
+        disponible: true,
       },
       {
         numero: 11,
@@ -132,6 +141,7 @@ export const FORMATIONS: Formation[] = [
         resume: "Landing page, SEO, réseaux, email, prospection et publicité : un tunnel simple et mesurable.",
         points: ["Landing page", "SEO", "Email et prospection", "Publicité", "Tunnel de vente"],
         livrable: "Votre plan d'acquisition sur 30 jours",
+        disponible: true,
       },
       {
         numero: 12,
@@ -139,13 +149,14 @@ export const FORMATIONS: Formation[] = [
         resume: "Vous assemblez tout et vous lancez : de l'idée au premier client.",
         points: ["Assemblage du projet", "Revue complète", "Checklist de lancement"],
         livrable: "Votre projet lancé",
+        disponible: true,
       },
     ],
     faq: [
       { q: "Faut-il savoir coder ?", r: "Non. Vous apprenez à faire écrire le code par l'IA, à le comprendre suffisamment pour le modifier, et à le mettre en ligne. Le module 4 vous donne les bases d'Internet sans jargon." },
       { q: "Quels outils faut-il payer ?", r: "Le parcours est conçu pour démarrer avec les versions gratuites (ChatGPT, Claude ou Gemini, GitHub, Netlify, Cloudflare). Un nom de domaine coûte en général une dizaine d'euros par an. Chaque module indique clairement ce qui est gratuit et ce qui ne l'est pas." },
       { q: "Combien de temps faut-il prévoir ?", r: "Comptez 1 h 30 à 2 h de vidéo par module, plus le temps de pratique sur votre projet. À raison de quelques heures par semaine, le parcours complet se fait en 2 à 3 mois." },
-      { q: "Y a-t-il un formateur en direct ?", r: "Non. AroBaz est conçu pour être suivi en autonomie, à votre rythme. Chaque leçon contient tout ce qu'il faut : vidéo, démonstration, prompt prêt à l'emploi, exercice et grille de vérification." },
+      { q: "Y a-t-il un formateur en direct ?", r: "Non. AROBAZ est conçu pour être suivi en autonomie, à votre rythme. Chaque leçon contient tout ce qu'il faut : vidéo, démonstration, prompt prêt à l'emploi, exercice et grille de vérification." },
     ],
   },
   {

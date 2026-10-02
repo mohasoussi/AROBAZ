@@ -84,7 +84,7 @@ const QUIZ_BRUT: Question[] = [
     explication: "Voir la leçon 6.",
   },
   {
-    question: "Quels sont les 5 éléments de la méthode AroBaz pour écrire un prompt ?",
+    question: "Quels sont les 5 éléments de la méthode AROBAZ pour écrire un prompt ?",
     choix: [
       "Contexte, Objectif, Cible, Contraintes, Format",
       "Clarté, Ordre, Couleur, Code, Fichier",
@@ -92,7 +92,7 @@ const QUIZ_BRUT: Question[] = [
       "Apprendre, Observer, Faire, Vérifier, Améliorer",
     ],
     bonne: 0,
-    explication: "C.O.C.C.F. Attention à ne pas confondre avec la méthode pédagogique AroBaz (Apprendre → Améliorer).",
+    explication: "C.O.C.C.F. Attention à ne pas confondre avec la méthode pédagogique AROBAZ (Apprendre → Améliorer).",
   },
   {
     question: "Une réponse bien écrite est-elle forcément exacte ?",
@@ -106,7 +106,7 @@ const QUIZ_BRUT: Question[] = [
     explication: "Voir la leçon 7 : l'IA peut se tromper avec assurance.",
   },
   {
-    question: "Quelle est la règle AroBaz avant de prendre une décision importante ?",
+    question: "Quelle est la règle AROBAZ avant de prendre une décision importante ?",
     choix: ["Demander → Copier → Publier", "Utiliser → Vérifier → Décider", "Décider → Utiliser → Oublier", "Chercher → Comparer → Payer"],
     bonne: 1,
     explication: "L'IA prépare, vous vérifiez, vous décidez.",

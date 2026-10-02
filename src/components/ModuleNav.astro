@@ -1,24 +1,25 @@
 ---
-import { MODULE1, leconUrl } from "../data/module1";
-const { actif } = Astro.props as { actif?: string };
+import { moduleParNumero, leconUrl, moduleUrl, validationUrl, idLeconIA, idModuleIA } from "../data/curriculum";
+const { numero, actif } = Astro.props as { numero: number; actif?: string };
+const M = moduleParNumero(numero);
 ---
-<nav class="mnav" aria-label="Leçons du module 1">
-  <a href="/espace/ia-business/module-1/" class="mtitle">
-    <span class="small muted">IA & Business · Module 1</span>
-    <strong>{MODULE1.titre}</strong>
+<nav class="mnav" aria-label={`Leçons du module ${M.numero}`}>
+  <a href={moduleUrl(M)} class="mtitle">
+    <span class="small muted">IA & Business · Module {M.numero}</span>
+    <strong>{M.titre}</strong>
   </a>
   <div class="bar"><span data-module-bar></span></div>
   <ol>
-    {MODULE1.lecons.map((l) => (
+    {M.lecons.map((l) => (
       <li>
-        <a href={leconUrl(l)} aria-current={actif === l.slug ? "page" : undefined} data-statut={`ia-business/${l.slug}`}>
+        <a href={leconUrl(l)} aria-current={actif === l.slug ? "page" : undefined} data-statut={idLeconIA(l)}>
           <span class="st" aria-hidden="true">{l.numero}</span>
           <span>{l.titre}</span>
         </a>
       </li>
     ))}
     <li>
-      <a href="/espace/ia-business/module-1/validation/" aria-current={actif === "validation" ? "page" : undefined} data-statut-module="ia-business/module-1">
+      <a href={validationUrl(M)} aria-current={actif === "validation" ? "page" : undefined} data-statut-module={idModuleIA(M)}>
         <span class="st" aria-hidden="true">✓</span>
         <span>Validation du module</span>
       </a>

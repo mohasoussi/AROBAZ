@@ -1,10 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { FORMATIONS, METHODE } from "../data/formations";
-import { MODULE1 } from "../data/module1";
+import { TOUTES_LECONS, MODULES } from "../data/curriculum";
 const total = FORMATIONS.reduce((n, f) => n + f.modules.length, 0);
 ---
-<BaseLayout title="AroBaz">
+<BaseLayout title="AROBAZ">
   <!-- 1. Hero éditorial -->
   <section class="hero">
     <div class="wrap hero-grid">
@@ -12,17 +12,17 @@ const total = FORMATIONS.reduce((n, f) => n + f.modules.length, 0);
         <span class="eyebrow">Formations IA & numérique · en autonomie</span>
         <h1>Apprenez.<br />Créez.<br /><span class="accent">Lancez-vous.</span></h1>
         <p class="lead">
-          AroBaz vous apprend à utiliser l'IA et les outils numériques pour créer vous-même votre projet, votre activité et votre communication.
+          AROBAZ vous apprend à utiliser l'IA et les outils numériques pour créer vous-même votre projet, votre activité et votre communication.
           Sans être développeur, designer ou expert en marketing.
         </p>
         <div class="actions">
           <a href="/espace/ia-business/module-1/" class="btn btn-primary">Commencer le module 1 gratuitement</a>
           <a href="/formations/" class="btn btn-ghost">Voir les formations</a>
         </div>
-        <p class="small muted">Module 1 en accès libre · aucune inscription · aucun prérequis</p>
+        <p class="small muted">Accès libre pendant la phase de démonstration · aucune inscription · aucun prérequis</p>
       </div>
 
-      <div class="hero-visual" aria-label="Aperçu d'une leçon AroBaz">
+      <div class="hero-visual" aria-label="Aperçu d'une leçon AROBAZ">
         <div class="lv card">
           <div class="lv-top">
             <span class="tag">Module 1 · Leçon 6</span>
@@ -62,7 +62,7 @@ const total = FORMATIONS.reduce((n, f) => n + f.modules.length, 0);
   <section class="section paper">
     <div class="wrap">
       <div class="head">
-        <span class="eyebrow">La méthode AroBaz</span>
+        <span class="eyebrow">La méthode AROBAZ</span>
         <h2>On ne retient vraiment que ce qu'on a fait soi-même.</h2>
         <p class="lead">Chaque leçon suit le même rythme en cinq temps. Pas de théorie qui s'accumule : une notion, une démonstration, et tout de suite la pratique sur votre propre projet.</p>
       </div>
@@ -108,7 +108,7 @@ const total = FORMATIONS.reduce((n, f) => n + f.modules.length, 0);
       <div><strong>{FORMATIONS.length}</strong><span>parcours complets</span></div>
       <div><strong>{total}</strong><span>modules au programme</span></div>
       <div><strong>0</strong><span>prérequis technique</span></div>
-      <div><strong>{MODULE1.lecons.length}</strong><span>leçons disponibles dès maintenant</span></div>
+      <div><strong>{TOUTES_LECONS.length}</strong><span>leçons disponibles dès maintenant</span></div>
     </div>
   </section>
 
@@ -140,12 +140,12 @@ const total = FORMATIONS.reduce((n, f) => n + f.modules.length, 0);
         <a class="card cat" href="/espace/ia-business/module-1/">
           <span class="tag tag-mint">Disponible · accès libre</span>
           <h3>Module 1 · Comprendre l'IA</h3>
-          <p class="muted">{MODULE1.lecons.length} leçons, exercices, prompts et quiz de validation. Votre premier assistant IA à la clé.</p>
+          <p class="muted">{MODULES[0].lecons.length} leçons, exercices, prompts et quiz de validation. Votre premier assistant IA à la clé.</p>
         </a>
         <a class="card cat" href="/formations/ia-business/">
-          <span class="tag">En préparation</span>
+          <span class="tag tag-mint">Disponible · lecture et exercices</span>
           <h3>IA & Business · parcours complet</h3>
-          <p class="muted">De l'idée au lancement : identité, site, e-commerce, application, automatisations.</p>
+          <p class="muted">{MODULES.length} modules, {TOUTES_LECONS.length} leçons : identité, site, e-commerce, application, automatisations, lancement. Les vidéos arrivent leçon après leçon.</p>
         </a>
         <a class="card cat" href="/formations/contenu-reseaux-sociaux/">
           <span class="tag tag-coral">En préparation</span>
@@ -162,7 +162,7 @@ const total = FORMATIONS.reduce((n, f) => n + f.modules.length, 0);
       <div class="cta">
         <div>
           <h2>Votre premier assistant IA, dès aujourd'hui.</h2>
-          <p>Le module 1 est en accès libre. En une à deux heures, vous comprenez l'IA, vous savez lui parler, et vous repartez avec un assistant configuré pour votre projet.</p>
+          <p>Le module 1 est en accès libre, comme le reste du parcours pendant la phase de démonstration. En une à deux heures, vous comprenez l'IA, vous savez lui parler, et vous repartez avec un assistant configuré pour votre projet.</p>
         </div>
         <a href="/espace/ia-business/module-1/" class="btn btn-light">Commencer maintenant</a>
       </div>

@@ -4,7 +4,7 @@ Règles communes (identiques au module 1)
 - Voix : « vous », chaleureuse, concrète, sans jargon inutile. Pas de féminin/masculin imposé à l'apprenant.
 - Structure de chaque leçon : Hook · Objectif · Explication(s) · Exemple concret · Démonstration/Atelier · Erreurs fréquentes · Mission · Transition.
 - Scènes « Démonstration » = captures d'écran RÉELLES à filmer (l'`ecran` commence par « CAPTURE RÉELLE À FILMER : »).
-- Méthodes AroBaz rappelées : Apprendre → Observer → Faire → Vérifier → Améliorer ; C.O.C.C.F. (prompt) ; Utiliser → Vérifier → Décider.
+- Méthodes AROBAZ rappelées : Apprendre → Observer → Faire → Vérifier → Améliorer ; C.O.C.C.F. (prompt) ; Utiliser → Vérifier → Décider.
 - Aucune fonctionnalité d'outil, prix, version ou chiffre légal inventé : on renvoie à la source officielle, et on le dit.
 - Les outils nommés sont des EXEMPLES (ils changent vite). La méthode doit marcher avec n'importe quel outil équivalent.
 - Fil rouge fictif : « Maison Verdure », boutique de plantes d'intérieur avec abonnement d'entretien, lancée par Léa.

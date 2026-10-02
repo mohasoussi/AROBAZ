@@ -1,4 +1,4 @@
-# Production des vidéos AroBaz
+# Production des vidéos AROBAZ
 
 Chaîne qui transforme les scripts du site (`src/data/module1-*.ts`) en vidéo 1920×1080 :
 voix off française synthétique, animations calées sur chaque phrase, sous-titres incrustés.

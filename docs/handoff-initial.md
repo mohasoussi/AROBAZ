@@ -1,12 +1,12 @@
 # AROBAZ — HANDOFF COMPLET POUR CLAUDE
 
 Date : 1 octobre 2026
-Projet : AroBaz — plateforme e-learning grand public
+Projet : AROBAZ — plateforme e-learning grand public
 Signature envisagée : « Apprenez. Créez. Lancez-vous. »
 
 ## 1. OBJECTIF DU PROJET
 
-AroBaz est une plateforme de formations en ligne destinée au grand public.
+AROBAZ est une plateforme de formations en ligne destinée au grand public.
 
 Positionnement :
 - apprendre à utiliser l’IA et les outils numériques de façon concrète ;
@@ -16,7 +16,7 @@ Positionnement :
 - chaque formation doit être réellement exploitable et orientée action.
 
 Promesse :
-« AroBaz vous apprend à utiliser l’IA et les outils numériques pour créer vous-même vos projets, votre activité et votre communication. »
+« AROBAZ vous apprend à utiliser l’IA et les outils numériques pour créer vous-même vos projets, votre activité et votre communication. »
 
 Méthode :
 APPRENDRE → OBSERVER → FAIRE → VÉRIFIER → AMÉLIORER
@@ -87,7 +87,7 @@ Sections prévues :
   - Créer son contenu & ses réseaux sociaux
   - Futures formations
 - Comment ça marche ?
-- À propos d’AroBaz
+- À propos d’AROBAZ
 - Ressources
 - Blog / Conseils
 - FAQ
@@ -461,7 +461,7 @@ Cas d’usage :
 - marketing
 - automatisation
 
-Méthode AroBaz :
+Méthode AROBAZ :
 APPRENDRE → OBSERVER → FAIRE → VÉRIFIER → AMÉLIORER
 
 Exercice :
@@ -484,7 +484,7 @@ Exemples :
 Point pédagogique :
 IA ≠ intelligence humaine.
 
-Objectif AroBaz :
+Objectif AROBAZ :
 ne pas devenir ingénieur IA, mais apprendre à utiliser l’IA comme outil de travail.
 
 ### Leçon 3 — L’IA générative
@@ -538,7 +538,7 @@ La pertinence du contexte compte davantage.
 Définition :
 un prompt est une instruction donnée à l’IA.
 
-Méthode AroBaz :
+Méthode AROBAZ :
 C — CONTEXTE
 O — OBJECTIF
 C — CIBLE
@@ -568,7 +568,7 @@ Causes possibles :
 - erreur de raisonnement
 - information inventée
 
-Règle AroBaz :
+Règle AROBAZ :
 UTILISER → VÉRIFIER → DÉCIDER
 
 Vigilance particulière :
@@ -645,9 +645,9 @@ Quiz :
 2. Qu’est-ce qu’une IA générative ?
 3. Quelle différence entre modèle et application ?
 4. Qu’est-ce qu’un prompt ?
-5. Quels sont les 5 éléments de la méthode AroBaz ?
+5. Quels sont les 5 éléments de la méthode AROBAZ ?
 6. Une réponse bien écrite est-elle forcément exacte ?
-7. Quelle est la règle AroBaz avant de prendre une décision importante ?
+7. Quelle est la règle AROBAZ avant de prendre une décision importante ?
 
 ## 10. FORMAT VIDÉO ATTENDU
 
@@ -735,13 +735,13 @@ Design ID : DAHWxYdkSM4
 Titre : « Bienvenue dans l’IA »
 
 Il comportait 12 pages :
-1. Bienvenue dans AroBaz
+1. Bienvenue dans AROBAZ
 2. L’IA n’est plus réservée aux experts
 3. L’IA est aujourd’hui accessible
 4. Ce que vous pouvez déjà faire
 5. Vous n’avez pas besoin de savoir coder
 6. Notre objectif
-7. La méthode AroBaz
+7. La méthode AROBAZ
 8. Comprendre
 9. Essayer et vérifier
 10. Savoir quoi faire faire à l’IA
@@ -763,10 +763,10 @@ Il doit être remplacé par une véritable production e-learning.
 Une voix française avait été testée avec un ancien système Higgsfield.
 
 Premier texte :
-« Bienvenue dans AroBaz. Dans cette formation, vous allez apprendre à utiliser l’intelligence artificielle pour créer vos propres projets, étape par étape, simplement et concrètement. »
+« Bienvenue dans AROBAZ. Dans cette formation, vous allez apprendre à utiliser l’intelligence artificielle pour créer vos propres projets, étape par étape, simplement et concrètement. »
 
 Un deuxième texte de démonstration avait été produit pour la leçon 2 :
-« L’intelligence artificielle, c’est un ensemble de technologies capables d’analyser des informations, de reconnaître des modèles et de produire des résultats à partir de données. Aujourd’hui, elle peut comprendre du texte, analyser des images, générer du contenu, traduire, résumer ou encore vous aider à résoudre un problème. Pour vous, l’objectif n’est pas de devenir ingénieur en intelligence artificielle. L’objectif est d’apprendre à vous en servir comme d’un véritable outil de travail. Dans AroBaz, nous allons donc partir de cas concrets : une idée, un projet, un site internet, du contenu ou une tâche à automatiser. À chaque étape, vous allez essayer par vous-même, vérifier le résultat, puis l’améliorer. »
+« L’intelligence artificielle, c’est un ensemble de technologies capables d’analyser des informations, de reconnaître des modèles et de produire des résultats à partir de données. Aujourd’hui, elle peut comprendre du texte, analyser des images, générer du contenu, traduire, résumer ou encore vous aider à résoudre un problème. Pour vous, l’objectif n’est pas de devenir ingénieur en intelligence artificielle. L’objectif est d’apprendre à vous en servir comme d’un véritable outil de travail. Dans AROBAZ, nous allons donc partir de cas concrets : une idée, un projet, un site internet, du contenu ou une tâche à automatiser. À chaque étape, vous allez essayer par vous-même, vérifier le résultat, puis l’améliorer. »
 
 La génération audio actuelle Higgsfield était ensuite bloquée par l’absence de crédits.
 Ne pas prétendre que l’audio final est disponible.
@@ -803,4 +803,4 @@ Ne pas inventer une fonctionnalité ou un outil qui n’est pas réellement disp
 Quand une limitation technique existe, la signaler clairement et proposer une solution réellement exécutable.
 
 OBJECTIF FINAL :
-AroBaz doit devenir une vraie plateforme de formation professionnelle, simple pour l’utilisateur final, visuellement premium, mais surtout pédagogiquement riche et réellement exploitable.
+AROBAZ doit devenir une vraie plateforme de formation professionnelle, simple pour l’utilisateur final, visuellement premium, mais surtout pédagogiquement riche et réellement exploitable.

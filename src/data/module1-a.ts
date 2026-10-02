@@ -11,7 +11,7 @@ export const LECONS_A: Lecon[] = [
     objectifs: [
       "Comprendre pourquoi l'IA est devenue accessible à tous",
       "Découvrir ce que vous pourrez réellement faire avec",
-      "Connaître la méthode AroBaz et l'organisation du module",
+      "Connaître la méthode AROBAZ et l'organisation du module",
     ],
     essentiel: [
       {
@@ -25,7 +25,7 @@ export const LECONS_A: Lecon[] = [
           "Écrire et reformuler des textes, créer des images, analyser un document, structurer un projet, créer un site, écrire du code, préparer des vidéos, produire du contenu marketing et automatiser des tâches répétitives. Ce parcours couvre chacun de ces usages, sur votre propre projet.",
       },
       {
-        titre: "La méthode AroBaz",
+        titre: "La méthode AROBAZ",
         texte:
           "Apprendre → Observer → Faire → Vérifier → Améliorer. Chaque leçon suit ce rythme : une notion, une démonstration, une mise en pratique sur votre projet, une vérification, puis une amélioration.",
       },
@@ -39,9 +39,9 @@ export const LECONS_A: Lecon[] = [
       },
       {
         partie: "Objectif",
-        ecran: "Logo AroBaz, puis titre de la leçon. À droite, les trois objectifs apparaissent en liste.",
+        ecran: "Logo AROBAZ, puis titre de la leçon. À droite, les trois objectifs apparaissent en liste.",
         voix:
-          "Bienvenue dans AroBaz. C'est un plaisir de vous accompagner dans cette formation. Dans cette première leçon, on va faire trois choses : comprendre pourquoi l'intelligence artificielle est devenue accessible à tout le monde, voir concrètement ce que vous allez pouvoir en faire, et découvrir comment ce parcours est construit, pour que vous sachiez exactement où vous allez.",
+          "Bienvenue dans AROBAZ. C'est un plaisir de vous accompagner dans cette formation. Dans cette première leçon, on va faire trois choses : comprendre pourquoi l'intelligence artificielle est devenue accessible à tout le monde, voir concrètement ce que vous allez pouvoir en faire, et découvrir comment ce parcours est construit, pour que vous sachiez exactement où vous allez.",
       },
       {
         partie: "Explication",
@@ -65,7 +65,7 @@ export const LECONS_A: Lecon[] = [
         partie: "Méthode",
         ecran: "Les cinq étapes de la méthode s'affichent en ligne, reliées par des flèches : Apprendre, Observer, Faire, Vérifier, Améliorer. Chaque étape s'illumine quand elle est citée.",
         voix:
-          "Dans AroBaz, chaque leçon suit la même méthode, en cinq temps. Apprendre : on découvre une notion, simplement. Observer : vous me regardez faire, sur de vrais outils. Faire : vous reproduisez sur votre projet à vous, avec un prompt ou une fiche prête à l'emploi. Vérifier : une grille de contrôle et un petit quiz vous disent si c'est solide. Améliorer : vous corrigez et vous gardez la meilleure version. Ce rythme est volontaire. On ne retient vraiment que ce qu'on a fait soi-même.",
+          "Dans AROBAZ, chaque leçon suit la même méthode, en cinq temps. Apprendre : on découvre une notion, simplement. Observer : vous me regardez faire, sur de vrais outils. Faire : vous reproduisez sur votre projet à vous, avec un prompt ou une fiche prête à l'emploi. Vérifier : une grille de contrôle et un petit quiz vous disent si c'est solide. Améliorer : vous corrigez et vous gardez la meilleure version. Ce rythme est volontaire. On ne retient vraiment que ce qu'on a fait soi-même.",
       },
       {
         partie: "Erreurs fréquentes",
@@ -129,7 +129,7 @@ export const LECONS_A: Lecon[] = [
         explication: "Formuler clairement et évaluer le résultat : c'est ce que vous allez travailler dans tout le parcours.",
       },
       {
-        question: "Dans quel ordre se déroule la méthode AroBaz ?",
+        question: "Dans quel ordre se déroule la méthode AROBAZ ?",
         choix: [
           "Faire → Apprendre → Vérifier → Observer → Améliorer",
           "Apprendre → Observer → Faire → Vérifier → Améliorer",
@@ -205,7 +205,7 @@ export const LECONS_A: Lecon[] = [
         partie: "Exemple concret",
         ecran: "Sept cartes s'affichent avec un exemple réel chacune : Reconnaissance (visage), Recommandation (films), Traduction, Analyse (devis), Classification (spam), Prédiction (météo, stocks), Génération (texte, image).",
         voix:
-          "Voyons les grandes familles d'usages. La reconnaissance : identifier un visage, une voix, un objet. La recommandation : vous proposer un film, une chanson, un produit. La traduction : passer d'une langue à l'autre. L'analyse : extraire l'essentiel d'un document ou d'un tableau. La classification : ranger automatiquement, comme le filtre anti-spam. La prédiction : estimer une demande, anticiper un stock. Et enfin la génération : produire du texte, des images, du son, de la vidéo ou du code. C'est cette dernière famille, l'IA générative, qui a tout changé ces dernières années. Et c'est celle qu'on va le plus utiliser dans AroBaz. On lui consacre toute la prochaine leçon.",
+          "Voyons les grandes familles d'usages. La reconnaissance : identifier un visage, une voix, un objet. La recommandation : vous proposer un film, une chanson, un produit. La traduction : passer d'une langue à l'autre. L'analyse : extraire l'essentiel d'un document ou d'un tableau. La classification : ranger automatiquement, comme le filtre anti-spam. La prédiction : estimer une demande, anticiper un stock. Et enfin la génération : produire du texte, des images, du son, de la vidéo ou du code. C'est cette dernière famille, l'IA générative, qui a tout changé ces dernières années. Et c'est celle qu'on va le plus utiliser dans AROBAZ. On lui consacre toute la prochaine leçon.",
       },
       {
         partie: "Point clé",
@@ -479,7 +479,7 @@ export const LECONS_A: Lecon[] = [
       {
         titre: "La bonne posture",
         texte:
-          "Partir du problème à résoudre, pas de l'outil. Si une méthode fonctionne, elle fonctionne dans n'importe quel assistant. C'est ce que vous apprenez dans AroBaz : une méthode, pas un bouton.",
+          "Partir du problème à résoudre, pas de l'outil. Si une méthode fonctionne, elle fonctionne dans n'importe quel assistant. C'est ce que vous apprenez dans AROBAZ : une méthode, pas un bouton.",
       },
     ],
     script: [
@@ -523,7 +523,7 @@ export const LECONS_A: Lecon[] = [
         partie: "Explication",
         ecran: "Deux personnages. Le premier : « Je sais utiliser ChatGPT. » Le second : « Je sais résoudre mon problème avec une IA. » Le second est mis en valeur.",
         voix:
-          "C'est pour ça que, dans AroBaz, on ne vous apprend pas à cliquer sur les boutons d'un outil en particulier. Les boutons changent. On vous apprend à résoudre un problème avec une IA : rédiger une offre, créer un site, analyser un marché. Si vous savez faire ça, vous pourrez passer d'un outil à l'autre en quelques minutes, et profiter du meilleur de chacun. Pour suivre ce parcours, choisissez un assistant principal, celui avec lequel vous êtes le plus à l'aise. Sa version gratuite suffit pour commencer. Et n'hésitez pas à en essayer un deuxième quand un résultat ne vous convient pas.",
+          "C'est pour ça que, dans AROBAZ, on ne vous apprend pas à cliquer sur les boutons d'un outil en particulier. Les boutons changent. On vous apprend à résoudre un problème avec une IA : rédiger une offre, créer un site, analyser un marché. Si vous savez faire ça, vous pourrez passer d'un outil à l'autre en quelques minutes, et profiter du meilleur de chacun. Pour suivre ce parcours, choisissez un assistant principal, celui avec lequel vous êtes le plus à l'aise. Sa version gratuite suffit pour commencer. Et n'hésitez pas à en essayer un deuxième quand un résultat ne vous convient pas.",
       },
       {
         partie: "Erreurs fréquentes",
@@ -573,7 +573,7 @@ export const LECONS_A: Lecon[] = [
         explication: "ChatGPT est un produit parmi d'autres. Claude (Anthropic) et Gemini (Google) en sont d'autres.",
       },
       {
-        question: "Dans l'analogie AroBaz, le modèle est…",
+        question: "Dans l'analogie AROBAZ, le modèle est…",
         choix: ["La voiture", "Le moteur", "Le conducteur"],
         bonne: 1,
         explication: "Le modèle est le moteur qui génère les réponses ; l'application est la voiture autour : interface, historique, fonctions.",
