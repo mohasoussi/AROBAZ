@@ -14,7 +14,11 @@ def o_special(couleur, point):
 
 def mot(couleur, anneau, point, suffixe, fond=None):
     s, l = g.mot("AROBAZ", 0, 110/2 + g.cap*80/2 - 6, 80, couleur, suivi=0.02, special={"O": o_special(anneau, point)})
-    open(f"final/arobaz-logo-{suffixe}.svg", "w").write(g.svg(round(l) + 4, 110, s, fond).replace('viewBox="0 0', 'viewBox="-2 0'))
+    PX, H = 34, 122
+    trait = "#111827" if couleur != "#FFFFFF" else "#FFFFFF"
+    cadre = f'<rect x="1.5" y="1.5" width="{round(l) + 2*PX - 3}" height="{H - 3}" rx="10" fill="none" stroke="{trait}" stroke-width="3"/>'
+    corps = f'<g transform="translate({PX},4)">{s}</g>'
+    open(f"final/arobaz-logo-{suffixe}.svg", "w").write(g.svg(round(l) + 2*PX, H, cadre + corps, fond))
 
 mot(BLEU, VIOLET, BLEU, "bleu")                  # fond clair
 mot("#FFFFFF", VIOLET_CLAIR, "#FFFFFF", "blanc")      # fond sombre ou bleu
