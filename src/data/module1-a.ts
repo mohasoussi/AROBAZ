@@ -8,6 +8,7 @@ export const LECONS_A: Lecon[] = [
     titre: "Bienvenue dans l'univers de l'IA",
     sousTitre: "Ce que l'IA change pour vous, et comment ce parcours va fonctionner.",
     dureeCible: "6 à 8 min",
+    video: "/videos/lecon-1.mp4",
     objectifs: [
       "Comprendre pourquoi l'IA est devenue accessible à tous",
       "Découvrir ce que vous pourrez réellement faire avec",
