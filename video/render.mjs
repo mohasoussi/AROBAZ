@@ -46,6 +46,7 @@ for (const w of which) {
     timing: isIntro ? { duree: dur } : timing.scenes[i] && { duree: dur, phrases: timing.scenes[i].phrases },
   });
   if (warns.length) console.log(`  ⚠ scène ${w}:`, warns.join(" | "));
+  await page.evaluate(() => Promise.all([...document.images].map((i) => i.decode().catch(() => {}))));
   const wav = isIntro ? `${dir}/intro.wav` : `${dir}/scene-${String(i).padStart(2, "0")}.wav`;
   const out = isIntro ? `${dir}/v-intro.mp4` : `${dir}/v-${String(i).padStart(2, "0")}.mp4`;
   const ff = spawn("ffmpeg", ["-y", "-v", "error", "-f", "image2pipe", "-framerate", String(FPS), "-c:v", "mjpeg", "-i", "-", "-i", wav, "-t", String(dur),

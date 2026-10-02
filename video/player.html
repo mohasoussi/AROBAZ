@@ -30,7 +30,7 @@ h1,h2,h3{font-family:"Manrope";letter-spacing:-.03em;line-height:1.08}
   <div class="blob" style="width:760px;height:760px;left:-200px;top:-260px;background:#cfdcff"></div>
   <div class="blob" style="width:640px;height:640px;right:-160px;top:380px;background:#cdeee3"></div>
   <div class="blob" style="width:520px;height:520px;left:42%;top:-300px;background:#fde0db;opacity:.4"></div>
-  <div class="chrome-top"><div class="logo"><span class="mark">@</span><span>Aro<b>Baz</b></span></div><div id="chrome-r"></div></div>
+  <div class="chrome-top"><div class="logo"><img src="logo/arobaz-logo-bleu.svg" alt="AROBAZ" style="height:46px;display:block"></div><div id="chrome-r"></div></div>
   <div id="tag">Illustration</div>
   <div id="content"></div>
   <div id="caption"></div>
@@ -91,7 +91,7 @@ const hidden = (el) => { el.style.opacity = 0; return el; }; // sécurité avant
 const K = {};
 
 K.intro = (s, C) => {
-  const logo = h("div", { class: "logo", style: "font-size:150px;gap:36px;justify-content:center" }, [h("span", { class: "mark", style: "width:170px;height:170px;border-radius:48px;font-size:110px;padding-bottom:10px" }, "@"), h("span", {}, ["Aro", h("b", {}, "Baz")])]);
+  const logo = h("div", { class: "logo", style: "justify-content:center" }, [h("img", { src: "logo/arobaz-logo-bleu.svg", alt: "AROBAZ", style: "height:170px;display:block" })]);
   const l1 = h("div", { class: "eyebrow", style: "text-align:center;margin-top:60px" }, s.ligne1);
   const l2 = h("h1", { style: "font-size:84px;text-align:center;margin-top:22px;font-weight:800" }, s.ligne2);
   const l3 = h("div", { style: "font-size:44px;text-align:center;color:var(--ink2);margin-top:20px" }, s.ligne3);
